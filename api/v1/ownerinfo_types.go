@@ -38,7 +38,7 @@ type OwnerInfoSpec struct {
 
 // MetadataUrls contains various URL templates for metadata access
 type MetadataUrls struct {
-	CSV        MetadataURL `json:"csv,omitempty"`
+	CSW        MetadataURL `json:"csw,omitempty"`
 	OpenSearch MetadataURL `json:"opensearch,omitempty"`
 	HTML       MetadataURL `json:"html,omitempty"`
 }

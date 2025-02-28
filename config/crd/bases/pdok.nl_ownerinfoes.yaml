@@ -55,7 +55,7 @@ spec:
                 description: MetadataUrls contains various URL templates for metadata
                   access
                 properties:
-                  csv:
+                  csw:
                     description: MetadataURL holds information about URL templates
                       for specific metadata formats
                     properties:

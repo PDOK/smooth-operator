@@ -158,6 +158,46 @@ spec:
                         type: object
                     type: object
                 type: object
+              wms:
+                description: WMS contains Web Map Service related information
+                properties:
+                  contactinformation:
+                    description: Information about a contact person for the service
+                    properties:
+                      contactaddress:
+                        description: The address for the contact supplying the service
+                        properties:
+                          address:
+                            type: string
+                          addresstype:
+                            type: string
+                          city:
+                            type: string
+                          country:
+                            type: string
+                          postcode:
+                            type: string
+                          stateorprovince:
+                            type: string
+                        type: object
+                      contactelectronicmailAddress:
+                        type: string
+                      contactfacsimiletelephone:
+                        type: string
+                      contactpersonprimary:
+                        description: The primary contact person
+                        properties:
+                          contactorganization:
+                            type: string
+                          contactperson:
+                            type: string
+                        type: object
+                      contactposition:
+                        type: string
+                      contactvoicetelephone:
+                        type: string
+                    type: object
+                type: object
             type: object
           status:
             description: OwnerInfoStatus defines the observed state of OwnerInfo.

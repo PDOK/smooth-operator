@@ -33,6 +33,7 @@ type OwnerInfoSpec struct {
 	MetadataUrls MetadataUrls `json:"metadataUrls,omitempty"`
 	Atom         Atom         `json:"atom,omitempty"`
 	WFS          WFS          `json:"wfs,omitempty"`
+	WMS          WMS          `json:"wms,omitempty"`
 }
 
 // MetadataUrls contains various URL templates for metadata access
@@ -115,6 +116,37 @@ type Address struct {
 type OnlineResource struct {
 	Type string `json:"type,omitempty"`
 	Href string `json:"href,omitempty"`
+}
+
+// WMS contains Web Map Service related information
+type WMS struct {
+	ContactInformation ContactInformation `json:"contactinformation,omitempty"`
+}
+
+// Information about a contact person for the service
+type ContactInformation struct {
+	ContactPersonPrimary         ContactPersonPrimary `json:"contactpersonprimary,omitempty"`
+	ContactPosition              string               `json:"contactposition,omitempty"`
+	ContactAddress               ContactAddress       `json:"contactaddress,omitempty"`
+	ContactVoiceTelephone        string               `json:"contactvoicetelephone,omitempty"`
+	ContactFacsimileTelephone    string               `json:"contactfacsimiletelephone,omitempty"`
+	ContactElectronicMailAddress string               `json:"contactelectronicmailAddress,omitempty"`
+}
+
+// The primary contact person
+type ContactPersonPrimary struct {
+	ContactPerson       string `json:"contactperson,omitempty"`
+	ContactOrganization string `json:"contactorganization,omitempty"`
+}
+
+// The address for the contact supplying the service
+type ContactAddress struct {
+	AddressType     string `json:"addresstype,omitempty"`
+	Address         string `json:"address,omitempty"`
+	City            string `json:"city,omitempty"`
+	StateOrProvince string `json:"stateorprovince,omitempty"`
+	PostCode        string `json:"postcode,omitempty"`
+	Country         string `json:"country,omitempty"`
 }
 
 // OwnerInfoStatus defines the observed state of OwnerInfo.

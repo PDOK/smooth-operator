@@ -1,4 +1,6 @@
 # smooth-operator
+Shared logic and structure library for PDOK operators. 
+This repo contains global Kinds and shared code base for other operator.
 
 <p align="center">
     <a href="https://youtu.be/4TYv2PhG89A?si=X_a7zpjaD_esgUAO&t=74">

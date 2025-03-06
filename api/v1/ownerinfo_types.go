@@ -157,6 +157,7 @@ type OwnerInfoStatus struct {
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:resource:categories=pdok
 
 // OwnerInfo is the Schema for the ownerinfoes API.
 type OwnerInfo struct {

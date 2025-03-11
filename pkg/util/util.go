@@ -48,9 +48,9 @@ import (
 	"k8s.io/apimachinery/pkg/util/strategicpatch"
 )
 
-func deleteObjects(ctx context.Context, c client.Client, objects []client.Object) (err error) {
+func DeleteObjects(ctx context.Context, c client.Client, objects []client.Object) (err error) {
 	for _, obj := range objects {
-		fullName := getObjectFullName(c, obj)
+		fullName := GetObjectFullName(c, obj)
 		err = client.IgnoreNotFound(c.Delete(ctx, obj))
 		if err != nil {
 			return fmt.Errorf("unable to delete resource %s: %w", fullName, err)
@@ -59,7 +59,7 @@ func deleteObjects(ctx context.Context, c client.Client, objects []client.Object
 	return
 }
 
-func finalizeIfNecessary(ctx context.Context, c client.Client, obj client.Object, finalizerName string, finalizer func() error) (shouldContinue bool, err error) {
+func FinalizeIfNecessary(ctx context.Context, c client.Client, obj client.Object, finalizerName string, finalizer func() error) (shouldContinue bool, err error) {
 	// not under deletion, ensure finalizer annotation
 	if obj.GetDeletionTimestamp().IsZero() {
 		if !controllerutil.ContainsFinalizer(obj, finalizerName) {
@@ -84,18 +84,18 @@ func finalizeIfNecessary(ctx context.Context, c client.Client, obj client.Object
 	return false, err
 }
 
-func setImmutableLabels(c client.Client, obj client.Object, labels map[string]string) error {
+func SetImmutableLabels(c client.Client, obj client.Object, labels map[string]string) error {
 	objLabels := obj.GetLabels()
 	if obj.GetResourceVersion() != "" || len(objLabels) > 0 {
 		if !equality.Semantic.DeepEqual(labels, objLabels) {
-			return fmt.Errorf("labels on %s are immutable", getObjectFullName(c, obj))
+			return fmt.Errorf("labels on %s are immutable", GetObjectFullName(c, obj))
 		}
 	}
 	obj.SetLabels(labels)
 	return nil
 }
 
-func strategicMergePatch[T, P any](obj *T, patch *P) (*T, error) {
+func StrategicMergePatch[T, P any](obj *T, patch *P) (*T, error) {
 	objJSON, err := json.Marshal(obj)
 	if err != nil {
 		return nil, errors.Wrap(err, "Failed to marshal the object")
@@ -119,7 +119,7 @@ func strategicMergePatch[T, P any](obj *T, patch *P) (*T, error) {
 	return &newObj, nil
 }
 
-func createIngressRuleAndStripPrefixForBaseURL(url url.URL, includeLocalhost, matchUnderscoreVersions, traefikV2 bool) (string, string) {
+func CreateIngressRuleAndStripPrefixForBaseURL(url url.URL, includeLocalhost, matchUnderscoreVersions, traefikV2 bool) (string, string) {
 	var hostMatch string
 	if includeLocalhost {
 		hostMatch = fmt.Sprintf("(Host(`localhost`) || Host(`%s`))", url.Hostname())
@@ -136,7 +136,7 @@ func createIngressRuleAndStripPrefixForBaseURL(url url.URL, includeLocalhost, ma
 
 	var pathRegexp string
 	if matchUnderscoreVersions {
-		pathRegexp = createRegexpForUnderscoreVersions(path)
+		pathRegexp = CreateRegexpForUnderscoreVersions(path)
 	} else {
 		pathRegexp = regexp.QuoteMeta(path)
 	}
@@ -163,7 +163,7 @@ func createIngressRuleAndStripPrefixForBaseURL(url url.URL, includeLocalhost, ma
 	return matchRule, stripPrefixRegexp
 }
 
-func createRegexpForUnderscoreVersions(path string) string {
+func CreateRegexpForUnderscoreVersions(path string) string {
 	// luckily Traefik also uses golang regular expressions syntax
 	// first create a regexp that literally matches the path
 	pathRegexp := regexp.QuoteMeta(path)
@@ -174,11 +174,11 @@ func createRegexpForUnderscoreVersions(path string) string {
 	return pathRegexp
 }
 
-func addHashSuffix(obj client.Object) error {
+func AddHashSuffix(obj client.Object) error {
 	orgName := obj.GetName()
-	bareName, existingHash := splitHashSuffix(obj.GetName())
+	bareName, existingHash := SplitHashSuffix(obj.GetName())
 	obj.SetName(bareName)
-	hash, err := kustomizeHash(obj)
+	hash, err := KustomizeHash(obj)
 	if err != nil {
 		obj.SetName(orgName)
 		return err
@@ -197,7 +197,7 @@ func addHashSuffix(obj client.Object) error {
 // pattern for a name with a hash suffix. the character set is deduced from hasher.encode
 var hashSuffixedRegex = regexp.MustCompile(`^(.+?)(?:-([gh2k4567890mbcdtf]{10}))?$`)
 
-func splitHashSuffix(in string) (name, hash string) {
+func SplitHashSuffix(in string) (name, hash string) {
 	m := hashSuffixedRegex.FindStringSubmatch(in)
 	if len(m) >= 2 {
 		return m[1], m[2]
@@ -207,7 +207,7 @@ func splitHashSuffix(in string) (name, hash string) {
 
 // kustomizeHash aims to calculate a hash for an object the same way kustomize does.
 // please make sure your object has its Kind set.
-func kustomizeHash(obj client.Object) (hash string, err error) {
+func KustomizeHash(obj client.Object) (hash string, err error) {
 	objJSON, err := json.Marshal(obj)
 	if err != nil {
 		return
@@ -220,7 +220,7 @@ func kustomizeHash(obj client.Object) (hash string, err error) {
 	return kustomizeHasher.Hash(objKYaml)
 }
 
-func ensureSetGVK(c client.Client, src client.Object, obj schema.ObjectKind) error {
+func EnsureSetGVK(c client.Client, src client.Object, obj schema.ObjectKind) error {
 	gvk, err := c.GroupVersionKindFor(src)
 	if err != nil {
 		return err
@@ -229,26 +229,26 @@ func ensureSetGVK(c client.Client, src client.Object, obj schema.ObjectKind) err
 	return nil
 }
 
-func getObjectFullName(c client.Client, obj client.Object) string {
+func GetObjectFullName(c client.Client, obj client.Object) string {
 	gvk, _ := c.GroupVersionKindFor(obj)
 	key := client.ObjectKeyFromObject(obj)
 	return gvk.Group + "/" + gvk.Version + "/" + gvk.Kind + "/" + key.String()
 }
 
-func boolPtr(b bool) *bool {
+func BoolPtr(b bool) *bool {
 	return &b
 }
 
-func int32Ptr(i int32) *int32 {
+func Int32Ptr(i int32) *int32 {
 	return &i
 }
 
-func intOrStrStrPtr(s string) *intstr.IntOrString {
+func IntOrStrStrPtr(s string) *intstr.IntOrString {
 	v := intstr.FromString(s)
 	return &v
 }
 
-func cloneOrEmptyMap[K comparable, V any](m map[K]V) map[K]V {
+func CloneOrEmptyMap[K comparable, V any](m map[K]V) map[K]V {
 	if m == nil {
 		return map[K]V{}
 	}

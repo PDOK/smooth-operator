@@ -25,11 +25,12 @@ type BBox struct {
 }
 
 func (b BBox) ToExtent() string {
-	return fmt.Sprintf("%s %s %s %s", b.MinX, b.MinY, b.MaxX, b.MaxY)
+	return strings.Trim(fmt.Sprintf("%s %s %s %s", b.MinX, b.MinY, b.MaxX, b.MaxY), " ")
 }
 
 func ExtentToBBox(extent string) BBox {
 	coords := strings.Split(extent, " ")
+	fmt.Println("Coords", coords)
 	if len(coords) != 4 {
 		panic(fmt.Errorf("Extent has %d coordinates, need 4.", len(coords)))
 	}

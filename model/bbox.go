@@ -5,6 +5,7 @@ package model
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -41,4 +42,51 @@ func ExtentToBBox(extent string) BBox {
 		MinY: coords[1],
 		MaxY: coords[3],
 	}
+}
+
+func (box *BBox) Combine(other BBox) {
+	minXA, err := strconv.ParseFloat(box.MinX, 64)
+	if err != nil {
+		panic(fmt.Errorf("Error while parsing minX to float: %w", err))
+	}
+
+	minYA, err := strconv.ParseFloat(box.MinY, 64)
+	if err != nil {
+		panic(fmt.Errorf("Error while parsing minY to float: %w", err))
+	}
+
+	maxXA, err := strconv.ParseFloat(box.MaxX, 64)
+	if err != nil {
+		panic(fmt.Errorf("Error while parsing maxX to float: %w", err))
+	}
+
+	maxYA, err := strconv.ParseFloat(box.MaxY, 64)
+	if err != nil {
+		panic(fmt.Errorf("Error while parsing maxY to float: %w", err))
+	}
+
+	minXB, err := strconv.ParseFloat(other.MinX, 64)
+	if err != nil {
+		panic(fmt.Errorf("Error while parsing minX to float: %w", err))
+	}
+
+	minYB, err := strconv.ParseFloat(other.MinY, 64)
+	if err != nil {
+		panic(fmt.Errorf("Error while parsing minY to float: %w", err))
+	}
+
+	maxXB, err := strconv.ParseFloat(other.MaxX, 64)
+	if err != nil {
+		panic(fmt.Errorf("Error while parsing maxX to float: %w", err))
+	}
+
+	maxYB, err := strconv.ParseFloat(other.MaxY, 64)
+	if err != nil {
+		panic(fmt.Errorf("Error while parsing maxY to float: %w", err))
+	}
+
+	box.MinX = strconv.FormatFloat(min(minXA, minXB), 'f', -1, 64)
+	box.MinY = strconv.FormatFloat(min(minYA, minYB), 'f', -1, 64)
+	box.MaxX = strconv.FormatFloat(max(maxXA, maxXB), 'f', -1, 64)
+	box.MaxY = strconv.FormatFloat(max(maxYA, maxYB), 'f', -1, 64)
 }

@@ -54,23 +54,23 @@ func ExtentToBBox(extent string) BBox {
 	}
 }
 
-func (box *BBox) Combine(other BBox) {
-	minXA, err := strconv.ParseFloat(box.MinX, 64)
+func (b *BBox) Combine(other BBox) {
+	minXA, err := strconv.ParseFloat(b.MinX, 64)
 	if err != nil {
 		panic(fmt.Errorf("Error while parsing minX to float: %w", err))
 	}
 
-	minYA, err := strconv.ParseFloat(box.MinY, 64)
+	minYA, err := strconv.ParseFloat(b.MinY, 64)
 	if err != nil {
 		panic(fmt.Errorf("Error while parsing minY to float: %w", err))
 	}
 
-	maxXA, err := strconv.ParseFloat(box.MaxX, 64)
+	maxXA, err := strconv.ParseFloat(b.MaxX, 64)
 	if err != nil {
 		panic(fmt.Errorf("Error while parsing maxX to float: %w", err))
 	}
 
-	maxYA, err := strconv.ParseFloat(box.MaxY, 64)
+	maxYA, err := strconv.ParseFloat(b.MaxY, 64)
 	if err != nil {
 		panic(fmt.Errorf("Error while parsing maxY to float: %w", err))
 	}
@@ -95,8 +95,8 @@ func (box *BBox) Combine(other BBox) {
 		panic(fmt.Errorf("Error while parsing maxY to float: %w", err))
 	}
 
-	box.MinX = strconv.FormatFloat(min(minXA, minXB), 'f', -1, 64)
-	box.MinY = strconv.FormatFloat(min(minYA, minYB), 'f', -1, 64)
-	box.MaxX = strconv.FormatFloat(max(maxXA, maxXB), 'f', -1, 64)
-	box.MaxY = strconv.FormatFloat(max(maxYA, maxYB), 'f', -1, 64)
+	b.MinX = strconv.FormatFloat(min(minXA, minXB), 'f', -1, 64)
+	b.MinY = strconv.FormatFloat(min(minYA, minYB), 'f', -1, 64)
+	b.MaxX = strconv.FormatFloat(max(maxXA, maxXB), 'f', -1, 64)
+	b.MaxY = strconv.FormatFloat(max(maxYA, maxYB), 'f', -1, 64)
 }

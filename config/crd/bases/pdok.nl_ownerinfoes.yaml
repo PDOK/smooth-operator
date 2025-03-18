@@ -45,7 +45,8 @@ spec:
                 description: Atom contains information about the dataset's author/owner
                 properties:
                   author:
-                    description: Author represents the author or owner of the dataset
+                    description: Author represents the author or owner of the service
+                      or dataset
                     properties:
                       email:
                         type: string

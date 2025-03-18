@@ -46,7 +46,7 @@ linters-settings:
       - http\.Error.*  # return RFC 7807 problem details instead
   gomoddirectives:
     replace-allow-list:
-      - github.com/wk8/go-ordered-map/v2
+      - github.com/abbot/go-http-auth  # https://github.com/traefik/traefik/issues/6873#issuecomment-637654361
 
 linters:
   disable-all: true

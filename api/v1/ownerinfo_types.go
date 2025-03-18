@@ -25,6 +25,7 @@ SOFTWARE.
 package v1
 
 import (
+	model "github.com/pdok/smooth-operator/model"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -51,13 +52,7 @@ type MetadataURL struct {
 
 // Atom contains information about the dataset's author/owner
 type Atom struct {
-	Author Author `json:"author,omitempty"`
-}
-
-// Author represents the author or owner of the dataset
-type Author struct {
-	Name  string `json:"name,omitempty"`
-	Email string `json:"email,omitempty"`
+	Author model.Author `json:"author,omitempty"`
 }
 
 // WFS contains Web Feature Service related information

@@ -29,11 +29,21 @@ func (b BBox) ToExtent() string {
 	return strings.Trim(fmt.Sprintf("%s %s %s %s", b.MinX, b.MinY, b.MaxX, b.MaxY), " ")
 }
 
+func (b BBox) ToPolygon() string {
+	var sb strings.Builder
+	sb.WriteString(b.MinX + " " + b.MinY + " ") // lower left
+	sb.WriteString(b.MinX + " " + b.MaxY + " ") // upper left
+	sb.WriteString(b.MaxX + " " + b.MaxY + " ") // upper right
+	sb.WriteString(b.MaxX + " " + b.MinY + " ") // lower right
+	sb.WriteString(b.MinX + " " + b.MinY)       // lower left, final vertice is equal to the first one
+	return sb.String()
+}
+
 func ExtentToBBox(extent string) BBox {
 	coords := strings.Split(extent, " ")
 	fmt.Println("Coords", coords)
 	if len(coords) != 4 {
-		panic(fmt.Errorf("Extent has %d coordinates, need 4.", len(coords)))
+		panic(fmt.Errorf("extent has %d coordinates, needs 4", len(coords)))
 	}
 
 	return BBox{

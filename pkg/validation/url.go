@@ -1,6 +1,7 @@
 package validation
 
 import (
+	"errors"
 	"fmt"
 	"net/url"
 )
@@ -14,11 +15,11 @@ func ValidateBaseURL(baseURL string) error {
 	}
 
 	if parsed.Scheme != "https" {
-		return fmt.Errorf("invalid BaseURL: must use https scheme")
+		return errors.New("invalid BaseURL: must use https scheme")
 	}
 
 	if len(parsed.Path) <= 1 {
-		return fmt.Errorf("invalid BaseURL: must have a path")
+		return errors.New("invalid BaseURL: must have a path")
 	}
 
 	return nil

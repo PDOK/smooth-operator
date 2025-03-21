@@ -1,6 +1,7 @@
 package validation
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 )
@@ -9,7 +10,7 @@ import (
 // Checks labels on creation
 func ValidateLabelsOnCreate(labels map[string]string) error {
 	if len(labels) == 0 {
-		return fmt.Errorf("labels must not be empty")
+		return errors.New("labels must not be empty")
 	}
 
 	return nil
@@ -28,7 +29,7 @@ func ValidateLabelsOnUpdate(oldLabels, newLabels map[string]string) error {
 		}
 	}
 
-	for newKey, _ := range newLabels {
+	for newKey := range newLabels {
 		if _, ok := oldLabels[newKey]; !ok {
 			reasons = append(reasons, fmt.Sprintf("label '%s' added", newKey))
 		}

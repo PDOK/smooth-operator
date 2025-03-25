@@ -4,22 +4,20 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.17.1
-  name: ownerinfoes.pdok.nl
+  name: ownerinfo.pdok.nl
 spec:
   group: pdok.nl
   names:
-    categories:
-    - pdok
     kind: OwnerInfo
     listKind: OwnerInfoList
-    plural: ownerinfoes
+    plural: ownerinfo
     singular: ownerinfo
   scope: Namespaced
   versions:
   - name: v1
     schema:
       openAPIV3Schema:
-        description: OwnerInfo is the Schema for the ownerinfoes API.
+        description: OwnerInfo is the Schema for the ownerinfo API.
         properties:
           apiVersion:
             description: |-
@@ -86,6 +84,8 @@ spec:
                         type: string
                     type: object
                 type: object
+              namespaceTemplate:
+                type: string
               wfs:
                 description: WFS contains Web Feature Service related information
                 properties:

@@ -1,9 +1,66 @@
 apiVersion: pdok.nl/v1
 kind: OwnerInfo
 metadata:
+  name: pdok
   labels:
     app.kubernetes.io/name: smooth-operator
     app.kubernetes.io/managed-by: kustomize
-  name: ownerinfo-sample
 spec:
-  # TODO(user): Add fields here
+  metadataUrls:
+    csw:
+      hrefTemplate: "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id={{identifier}}"
+      type:
+    opensearch:
+      hrefTemplate: "https://www.nationaalgeoregister.nl/geonetwork/opensearch/dut/{{identifier}}/OpenSearchDescription.xml"
+      type:
+    html:
+      hrefTemplate: "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/catalog.search#/metadata/{{identifier}}"
+      type:
+  namespaceTemplate: "http://{{prefix}}.geonovum.nl"
+  atom:
+    author: # author/owner van de dataset
+      name: pdok
+      email: pdokbeheer@kadaster.nl
+  wfs:
+    serviceprovider:
+      providername:
+      providersite:
+        type:
+        href:
+      servicecontact:
+        individualname:
+        positionname:
+        contactinfo:
+          text:
+            voice:
+            facsmile:
+          phone:
+          address:
+            deliverypoint:
+            city:
+            administrativearea:
+            postalcode:
+            country:
+            electronicmailaddress:
+          onlineresource:
+            type:
+            href:
+          hoursofservice:
+          contactinstructions:
+        role:
+  wms:
+    contactinformation:
+      contactpersonprimary:
+        contactperson:
+        contactorganization:
+      contactposition:
+      contactaddress:
+        addresstype:
+        address:
+        city:
+        stateorprovince:
+        postalcode:
+        country:
+      contactvoicetelephone:
+      contactfacsimiletelephone:
+      contactelectronicmailaddress:

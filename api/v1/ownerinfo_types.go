@@ -31,10 +31,11 @@ import (
 
 // OwnerInfoSpec defines the desired state of OwnerInfo.
 type OwnerInfoSpec struct {
-	MetadataUrls MetadataUrls `json:"metadataUrls,omitempty"`
-	Atom         Atom         `json:"atom,omitempty"`
-	WFS          WFS          `json:"wfs,omitempty"`
-	WMS          WMS          `json:"wms,omitempty"`
+	MetadataUrls      MetadataUrls `json:"metadataUrls,omitempty"`
+	Atom              Atom         `json:"atom,omitempty"`
+	WFS               WFS          `json:"wfs,omitempty"`
+	WMS               WMS          `json:"wms,omitempty"`
+	NamespaceTemplate string       `json:"namespaceTemplate,omitempty"`
 }
 
 // MetadataUrls contains various URL templates for metadata access
@@ -153,8 +154,9 @@ type OwnerInfoStatus struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:categories=pdok
+// +kubebuilder:resource:path=ownerinfo
 
-// OwnerInfo is the Schema for the ownerinfoes API.
+// OwnerInfo is the Schema for the ownerinfo API.
 type OwnerInfo struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

@@ -16,12 +16,12 @@ rules:
 - apiGroups:
   - pdok.nl
   resources:
-  - ownerinfoes
+  - ownerinfo
   verbs:
   - '*'
 - apiGroups:
   - pdok.nl
   resources:
-  - ownerinfoes/status
+  - ownerinfo/status
   verbs:
   - get

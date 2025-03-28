@@ -23,13 +23,13 @@ spec:
       email: pdokbeheer@kadaster.nl
   wfs:
     serviceprovider:
-      providername:
+      providername: PDOK
       providersite:
-        type:
-        href:
+        type: simple
+        href: https://pdok.nl
       servicecontact:
-        individualname:
-        positionname:
+        individualname: KlantContactCenter PDOK
+        positionname: pointOfContact
         contactinfo:
           text:
             voice:
@@ -37,11 +37,11 @@ spec:
           phone:
           address:
             deliverypoint:
-            city:
+            city: Apeldoorn
             administrativearea:
             postalcode:
-            country:
-            electronicmailaddress:
+            country: Netherlands
+            electronicmailaddress: BeheerPDOK@kadaster.nl
           onlineresource:
             type:
             href:
@@ -51,16 +51,16 @@ spec:
   wms:
     contactinformation:
       contactpersonprimary:
-        contactperson:
-        contactorganization:
-      contactposition:
+        contactperson: KlantContactCenter PDOK
+        contactorganization: PDOK
+      contactposition: pointOfContact
       contactaddress:
         addresstype:
         address:
-        city:
+        city: Apeldoorn
         stateorprovince:
         postalcode:
-        country:
+        country: Netherlands
       contactvoicetelephone:
       contactfacsimiletelephone:
-      contactelectronicmailaddress:
+      contactelectronicmailaddress: BeheerPDOK@kadaster.nl

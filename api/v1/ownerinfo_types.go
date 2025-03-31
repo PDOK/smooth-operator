@@ -63,86 +63,86 @@ type WFS struct {
 
 // ServiceProvider describes the provider of the WFS service
 type ServiceProvider struct {
-	ProviderName   string         `json:"providername,omitempty"`
-	ProviderSite   ProviderSite   `json:"providersite,omitempty"`
-	ServiceContact ServiceContact `json:"servicecontact,omitempty"`
+	ProviderName   *string         `json:"providername,omitempty"`
+	ProviderSite   *ProviderSite   `json:"providersite,omitempty"`
+	ServiceContact *ServiceContact `json:"servicecontact,omitempty"`
 }
 
 // ProviderSite holds information about the provider's site
 type ProviderSite struct {
-	Type string `json:"type,omitempty"`
-	Href string `json:"href,omitempty"`
+	Type string `json:"type"`
+	Href string `json:"href"`
 }
 
 // ServiceContact provides contact information for the service
 type ServiceContact struct {
-	IndividualName string      `json:"individualname,omitempty"`
-	PositionName   string      `json:"positionname,omitempty"`
-	ContactInfo    ContactInfo `json:"contactinfo,omitempty"`
-	Role           string      `json:"role,omitempty"`
+	IndividualName *string      `json:"individualname,omitempty"`
+	PositionName   *string      `json:"positionname,omitempty"`
+	ContactInfo    *ContactInfo `json:"contactinfo,omitempty"`
+	Role           *string      `json:"role,omitempty"`
 }
 
 // ContactInfo encapsulates various types of contact information
 type ContactInfo struct {
-	Text                string         `json:"text,omitempty"`
-	Phone               Phone          `json:"phone,omitempty"`
-	Address             Address        `json:"address,omitempty"`
-	OnlineResource      OnlineResource `json:"onlineresource,omitempty"`
-	HoursOfService      string         `json:"hoursofservice,omitempty"`
-	ContactInstructions string         `json:"contactinstructions,omitempty"`
+	Text                *string         `json:"text,omitempty"`
+	Phone               *Phone          `json:"phone,omitempty"`
+	Address             *Address        `json:"address,omitempty"`
+	OnlineResource      *OnlineResource `json:"onlineresource,omitempty"`
+	HoursOfService      *string         `json:"hoursofservice,omitempty"`
+	ContactInstructions *string         `json:"contactinstructions,omitempty"`
 }
 
 // Phone contains voice and facsimile numbers
 type Phone struct {
-	Voice     string `json:"voice,omitempty"`
-	Facsimile string `json:"facsmile,omitempty"`
+	Voice     *string `json:"voice,omitempty"`
+	Facsimile *string `json:"facsmile,omitempty"`
 }
 
 // Address provides physical address details
 type Address struct {
-	DeliveryPoint         string `json:"deliverypoint,omitempty"`
-	City                  string `json:"city,omitempty"`
-	AdministrativeArea    string `json:"administrativearea,omitempty"`
-	PostalCode            string `json:"postalcode,omitempty"`
-	Country               string `json:"country,omitempty"`
-	ElectronicMailAddress string `json:"electronicmailaddress,omitempty"`
+	DeliveryPoint         *string `json:"deliverypoint,omitempty"`
+	City                  *string `json:"city,omitempty"`
+	AdministrativeArea    *string `json:"administrativearea,omitempty"`
+	PostalCode            *string `json:"postalcode,omitempty"`
+	Country               *string `json:"country,omitempty"`
+	ElectronicMailAddress *string `json:"electronicmailaddress,omitempty"`
 }
 
 // OnlineResource describes an online resource associated with the contact
 type OnlineResource struct {
-	Type string `json:"type,omitempty"`
-	Href string `json:"href,omitempty"`
+	Type *string `json:"type,omitempty"`
+	Href *string `json:"href,omitempty"`
 }
 
 // WMS contains Web Map Service related information
 type WMS struct {
-	ContactInformation ContactInformation `json:"contactinformation,omitempty"`
+	ContactInformation *ContactInformation `json:"contactinformation,omitempty"`
 }
 
 // Information about a contact person for the service
 type ContactInformation struct {
-	ContactPersonPrimary         ContactPersonPrimary `json:"contactpersonprimary,omitempty"`
-	ContactPosition              string               `json:"contactposition,omitempty"`
-	ContactAddress               ContactAddress       `json:"contactaddress,omitempty"`
-	ContactVoiceTelephone        string               `json:"contactvoicetelephone,omitempty"`
-	ContactFacsimileTelephone    string               `json:"contactfacsimiletelephone,omitempty"`
-	ContactElectronicMailAddress string               `json:"contactelectronicmailAddress,omitempty"`
+	ContactPersonPrimary         *ContactPersonPrimary `json:"contactpersonprimary,omitempty"`
+	ContactPosition              *string               `json:"contactposition,omitempty"`
+	ContactAddress               *ContactAddress       `json:"contactaddress,omitempty"`
+	ContactVoiceTelephone        *string               `json:"contactvoicetelephone,omitempty"`
+	ContactFacsimileTelephone    *string               `json:"contactfacsimiletelephone,omitempty"`
+	ContactElectronicMailAddress *string               `json:"contactelectronicmailAddress,omitempty"`
 }
 
 // The primary contact person
 type ContactPersonPrimary struct {
-	ContactPerson       string `json:"contactperson,omitempty"`
-	ContactOrganization string `json:"contactorganization,omitempty"`
+	ContactPerson       *string `json:"contactperson,omitempty"`
+	ContactOrganization *string `json:"contactorganization,omitempty"`
 }
 
 // The address for the contact supplying the service
 type ContactAddress struct {
-	AddressType     string `json:"addresstype,omitempty"`
-	Address         string `json:"address,omitempty"`
-	City            string `json:"city,omitempty"`
-	StateOrProvince string `json:"stateorprovince,omitempty"`
-	PostCode        string `json:"postcode,omitempty"`
-	Country         string `json:"country,omitempty"`
+	AddressType     *string `json:"addresstype,omitempty"`
+	Address         *string `json:"address,omitempty"`
+	City            *string `json:"city,omitempty"`
+	StateOrProvince *string `json:"stateorprovince,omitempty"`
+	PostCode        *string `json:"postcode,omitempty"`
+	Country         *string `json:"country,omitempty"`
 }
 
 // OwnerInfoStatus defines the observed state of OwnerInfo.

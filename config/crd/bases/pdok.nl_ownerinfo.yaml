@@ -142,15 +142,15 @@ spec:
                                     type: string
                                 type: object
                               phone:
-                                type: string
-                              text:
-                                description: Text contains voice and facsimile numbers
+                                description: Phone contains voice and facsimile numbers
                                 properties:
                                   facsmile:
                                     type: string
                                   voice:
                                     type: string
                                 type: object
+                              text:
+                                type: string
                             type: object
                           individualname:
                             type: string

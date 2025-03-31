@@ -31,10 +31,10 @@ spec:
         individualname: KlantContactCenter PDOK
         positionname: pointOfContact
         contactinfo:
-          text:
+          phone:
             voice:
             facsmile:
-          phone:
+          text:
           address:
             deliverypoint:
             city: Apeldoorn

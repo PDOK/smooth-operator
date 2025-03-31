@@ -84,16 +84,16 @@ type ServiceContact struct {
 
 // ContactInfo encapsulates various types of contact information
 type ContactInfo struct {
-	Text                Text           `json:"text,omitempty"`
-	Phone               string         `json:"phone,omitempty"`
+	Text                string         `json:"text,omitempty"`
+	Phone               Phone          `json:"phone,omitempty"`
 	Address             Address        `json:"address,omitempty"`
 	OnlineResource      OnlineResource `json:"onlineresource,omitempty"`
 	HoursOfService      string         `json:"hoursofservice,omitempty"`
 	ContactInstructions string         `json:"contactinstructions,omitempty"`
 }
 
-// Text contains voice and facsimile numbers
-type Text struct {
+// Phone contains voice and facsimile numbers
+type Phone struct {
 	Voice     string `json:"voice,omitempty"`
 	Facsimile string `json:"facsmile,omitempty"`
 }

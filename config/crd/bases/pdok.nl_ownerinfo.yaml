@@ -103,6 +103,9 @@ spec:
                             type: string
                           type:
                             type: string
+                        required:
+                        - href
+                        - type
                         type: object
                       servicecontact:
                         description: ServiceContact provides contact information for

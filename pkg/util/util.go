@@ -244,6 +244,14 @@ func IntOrStrStrPtr(s string) *intstr.IntOrString {
 	return &v
 }
 
+func PointerVal[T interface{}](val *T, defaultValue T) T {
+	if val != nil {
+		return *val
+	}
+
+	return defaultValue
+}
+
 func CloneOrEmptyMap[K comparable, V any](m map[K]V) map[K]V {
 	if m == nil {
 		return map[K]V{}

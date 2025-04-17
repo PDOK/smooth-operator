@@ -31,34 +31,34 @@ import (
 
 // OwnerInfoSpec defines the desired state of OwnerInfo.
 type OwnerInfoSpec struct {
-	MetadataUrls      MetadataUrls `json:"metadataUrls,omitempty"`
-	Atom              Atom         `json:"atom,omitempty"`
-	WFS               WFS          `json:"wfs,omitempty"`
-	WMS               WMS          `json:"wms,omitempty"`
-	NamespaceTemplate string       `json:"namespaceTemplate,omitempty"`
+	MetadataUrls      *MetadataUrls `json:"metadataUrls,omitempty"`
+	Atom              *Atom         `json:"atom,omitempty"`
+	WFS               *WFS          `json:"wfs,omitempty"`
+	WMS               *WMS          `json:"wms,omitempty"`
+	NamespaceTemplate *string       `json:"namespaceTemplate,omitempty"`
 }
 
 // MetadataUrls contains various URL templates for metadata access
 type MetadataUrls struct {
-	CSW        MetadataURL `json:"csw,omitempty"`
-	OpenSearch MetadataURL `json:"opensearch,omitempty"`
-	HTML       MetadataURL `json:"html,omitempty"`
+	CSW        *MetadataURL `json:"csw,omitempty"`
+	OpenSearch *MetadataURL `json:"opensearch,omitempty"`
+	HTML       *MetadataURL `json:"html,omitempty"`
 }
 
 // MetadataURL holds information about URL templates for specific metadata formats
 type MetadataURL struct {
-	HrefTemplate string `json:"hrefTemplate,omitempty"`
-	Type         string `json:"type,omitempty"`
+	HrefTemplate string `json:"hrefTemplate"`
+	Type         string `json:"type"`
 }
 
 // Atom contains information about the dataset's author/owner
 type Atom struct {
-	Author model.Author `json:"author,omitempty"`
+	Author model.Author `json:"author"`
 }
 
 // WFS contains Web Feature Service related information
 type WFS struct {
-	ServiceProvider ServiceProvider `json:"serviceprovider,omitempty"`
+	ServiceProvider ServiceProvider `json:"serviceprovider"`
 }
 
 // ServiceProvider describes the provider of the WFS service
@@ -116,7 +116,7 @@ type OnlineResource struct {
 
 // WMS contains Web Map Service related information
 type WMS struct {
-	ContactInformation *ContactInformation `json:"contactinformation,omitempty"`
+	ContactInformation ContactInformation `json:"contactinformation"`
 }
 
 // Information about a contact person for the service
@@ -161,8 +161,8 @@ type OwnerInfo struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   OwnerInfoSpec   `json:"spec,omitempty"`
-	Status OwnerInfoStatus `json:"status,omitempty"`
+	Spec   OwnerInfoSpec    `json:"spec"`
+	Status *OwnerInfoStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true

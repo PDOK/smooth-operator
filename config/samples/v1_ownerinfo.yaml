@@ -63,4 +63,4 @@ spec:
         country: Netherlands
       contactvoicetelephone:
       contactfacsimiletelephone:
-      contactelectronicmailaddress: BeheerPDOK@kadaster.nl
+      contactelectronicmailAddress: BeheerPDOK@kadaster.nl

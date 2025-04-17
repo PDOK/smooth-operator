@@ -41,7 +41,6 @@ func (b BBox) ToPolygon() string {
 
 func ExtentToBBox(extent string) BBox {
 	coords := strings.Split(extent, " ")
-	fmt.Println("Coords", coords)
 	if len(coords) != 4 {
 		panic(fmt.Errorf("extent has %d coordinates, needs 4", len(coords)))
 	}

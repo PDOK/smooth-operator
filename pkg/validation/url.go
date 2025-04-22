@@ -14,7 +14,7 @@ func ValidateBaseURL(baseURL string) error {
 		return fmt.Errorf("invalid BaseURL: %w", err)
 	}
 
-	if parsed.Scheme != "https" {
+	if parsed.Scheme != "https" && parsed.Hostname() != "localhost" {
 		return errors.New("invalid BaseURL: must use https scheme")
 	}
 

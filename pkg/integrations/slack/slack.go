@@ -2,12 +2,15 @@ package slack
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"slices"
 	"strings"
 )
 
 type SlackRequest struct {
 	Attachments []SlackElement `json:"attachments"`
+	Text        *string        `json:"text,omitempty"`
 }
 
 type SlackElement struct {
@@ -84,6 +87,13 @@ func GetSlackErrorMessage(message string, bundle string, color string) SlackRequ
 	}
 }
 
+func GetSimpleSlackErrorMessage(message string) SlackRequest {
+	return SlackRequest{
+		Attachments: nil,
+		Text:        &message,
+	}
+}
+
 func SendSlackRequest(slackRequest SlackRequest, slackUrl string) error {
 	marshalled, err := json.Marshal(slackRequest)
 	if err != nil {
@@ -95,4 +105,26 @@ func SendSlackRequest(slackRequest SlackRequest, slackUrl string) error {
 	}
 	defer response.Body.Close()
 	return nil
+}
+
+type SlackZapWriter struct {
+	OperatorName    string
+	SlackWebhookUrl string
+}
+
+func (slackWriter *SlackZapWriter) Write(p []byte) (n int, err error) {
+	messageMap := make(map[string]string)
+	json.Unmarshal(p, &messageMap)
+	level := messageMap["level"]
+	errorMessage := messageMap["error"]
+	if slices.Contains([]string{"error", "panic", "fatal"}, level) {
+		print(string(p))
+		if slackWriter.SlackWebhookUrl != "" {
+			slackRequest := GetSimpleSlackErrorMessage(fmt.Sprintf("%s: %s", slackWriter.OperatorName, errorMessage))
+			SendSlackRequest(slackRequest, slackWriter.SlackWebhookUrl)
+		}
+	} else {
+		print(string(p))
+	}
+	return len(p), nil
 }

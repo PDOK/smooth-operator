@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"slices"
 	"strings"
 )
 
@@ -112,19 +111,14 @@ type SlackZapWriter struct {
 	SlackWebhookUrl string
 }
 
+func (slackWriter *SlackZapWriter) Sync() error {
+	return nil
+}
+
 func (slackWriter *SlackZapWriter) Write(p []byte) (n int, err error) {
-	messageMap := make(map[string]string)
-	json.Unmarshal(p, &messageMap)
-	level := messageMap["level"]
-	errorMessage := messageMap["error"]
-	if slices.Contains([]string{"error", "panic", "fatal"}, level) {
-		print(string(p))
-		if slackWriter.SlackWebhookUrl != "" {
-			slackRequest := GetSimpleSlackErrorMessage(fmt.Sprintf("%s: %s", slackWriter.OperatorName, errorMessage))
-			SendSlackRequest(slackRequest, slackWriter.SlackWebhookUrl)
-		}
-	} else {
-		print(string(p))
+	if slackWriter.SlackWebhookUrl != "" {
+		slackRequest := GetSimpleSlackErrorMessage(fmt.Sprintf("%s: %s", slackWriter.OperatorName, string(p)))
+		SendSlackRequest(slackRequest, slackWriter.SlackWebhookUrl)
 	}
 	return len(p), nil
 }

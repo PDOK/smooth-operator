@@ -14,7 +14,7 @@ func (s StdoutWriter) Write(p []byte) (n int, err error) {
 	return len(p), nil
 }
 
-func SetupLogger(operatorName string, slackWebhookUrl string) (*zap.Logger, error) {
+func SetupLogger(operatorName string, slackWebhookUrl string, minLogLevel zapcore.LevelEnabler) (*zap.Logger, error) {
 	// Standard output writer
 	stdoutSyncer := zapcore.Lock(zapcore.AddSync(StdoutWriter{}))
 
@@ -32,7 +32,7 @@ func SetupLogger(operatorName string, slackWebhookUrl string) (*zap.Logger, erro
 	stdoutCore := zapcore.NewCore(
 		zapcore.NewConsoleEncoder(encoderConfig),
 		stdoutSyncer,
-		zapcore.InfoLevel,
+		minLogLevel,
 	)
 
 	// Create a core for Slack (errors only)

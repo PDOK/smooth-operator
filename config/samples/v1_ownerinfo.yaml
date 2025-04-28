@@ -59,7 +59,7 @@ spec:
         address:
         city: Apeldoorn
         stateorprovince:
-        postalcode:
+        postcode:
         country: Netherlands
       contactvoicetelephone:
       contactfacsimiletelephone:

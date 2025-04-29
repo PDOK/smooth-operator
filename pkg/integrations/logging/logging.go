@@ -46,6 +46,6 @@ func SetupLogger(operatorName string, slackWebhookUrl string, minLogLevel zapcor
 	combinedCore := zapcore.NewTee(stdoutCore, slackCore)
 
 	// Build the logger
-	logger := zap.New(combinedCore, zap.AddCaller())
+	logger := zap.New(combinedCore, zap.AddCaller(), zap.Development())
 	return logger, nil
 }

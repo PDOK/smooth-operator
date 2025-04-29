@@ -31,11 +31,11 @@ func (b BBox) ToExtent() string {
 
 func (b BBox) ToPolygon() string {
 	var sb strings.Builder
-	sb.WriteString(b.MinX + " " + b.MinY + " ") // lower left
-	sb.WriteString(b.MinX + " " + b.MaxY + " ") // upper left
-	sb.WriteString(b.MaxX + " " + b.MaxY + " ") // upper right
-	sb.WriteString(b.MaxX + " " + b.MinY + " ") // lower right
-	sb.WriteString(b.MinX + " " + b.MinY)       // lower left, final vertice is equal to the first one
+	sb.WriteString(b.MinY + " " + b.MinX + " ")
+	sb.WriteString(b.MinY + " " + b.MaxX + " ")
+	sb.WriteString(b.MaxY + " " + b.MaxX + " ")
+	sb.WriteString(b.MaxY + " " + b.MinX + " ")
+	sb.WriteString(b.MinY + " " + b.MinX)
 	return sb.String()
 }
 

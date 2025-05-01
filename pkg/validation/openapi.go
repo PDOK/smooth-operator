@@ -60,17 +60,17 @@ func ApplySchemaDefaults(raw map[string]interface{}) (map[string]interface{}, er
 
 	kind, ok := data.Object["kind"]
 	if !ok {
-		return nil, errors.New("kind not found in yaml")
+		return raw, errors.New("kind not found in yaml")
 	}
 	if val, ok := validators[kind.(string)]; ok {
 		err := val.ApplyDefaults(data)
 		if err != nil {
-			return nil, err
+			return raw, err
 		}
 
-		return data.Object, err
+		return data.Object, nil
 	} else {
-		return nil, fmt.Errorf("no schemas found for CRD '%v'", kind)
+		return raw, fmt.Errorf("no schemas found for CRD '%v'", kind)
 	}
 }
 

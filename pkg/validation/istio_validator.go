@@ -26,7 +26,7 @@ import (
 
 // Validator returns a new validator for custom resources
 // Warning: this is meant for usage in tests only
-type Validator struct {
+type validator struct {
 	byGvk      map[schema.GroupVersionKind]validation.SchemaCreateValidator
 	structural map[schema.GroupVersionKind]*structuralschema.Structural
 	cel        map[schema.GroupVersionKind]*cel.Validator
@@ -34,7 +34,7 @@ type Validator struct {
 	SkipMissing bool
 }
 
-func (v *Validator) ValidateCustomResourceYAML(data string) error {
+func (v *validator) ValidateCustomResourceYAML(data string) error {
 	obj := &unstructured.Unstructured{}
 	if err := yaml.Unmarshal([]byte(data), obj); err != nil {
 		return err
@@ -43,23 +43,35 @@ func (v *Validator) ValidateCustomResourceYAML(data string) error {
 	return v.ValidateCustomResource(obj)
 }
 
-func (v *Validator) ValidateCustomResource(o runtime.Object) error {
+func (v *validator) ApplyDefaults(data *unstructured.Unstructured) error {
+	_, f := v.byGvk[data.GroupVersionKind()]
+	if !f {
+		if v.SkipMissing {
+			return nil
+		}
+		return fmt.Errorf("failed to validate type %v: no validator found", data.GroupVersionKind())
+	}
+
+	// Fill in defaults
+	structural := v.structural[data.GroupVersionKind()]
+	structuraldefaulting.Default(data.Object, structural)
+
+	return nil
+}
+
+func (v *validator) ValidateCustomResource(o runtime.Object) error {
 	content, err := runtime.DefaultUnstructuredConverter.ToUnstructured(o)
 	if err != nil {
 		return err
 	}
 
 	un := &unstructured.Unstructured{Object: content}
-	vd, f := v.byGvk[un.GroupVersionKind()]
-	if !f {
-		if v.SkipMissing {
-			return nil
-		}
-		return fmt.Errorf("failed to validate type %v: no validator found", un.GroupVersionKind())
+	vd, _ := v.byGvk[un.GroupVersionKind()]
+	err = v.ApplyDefaults(un)
+	if err != nil {
+		return err
 	}
-	// Fill in defaults
 	structural := v.structural[un.GroupVersionKind()]
-	structuraldefaulting.Default(un.Object, structural)
 	if err := validation.ValidateCustomResource(nil, un.Object, vd).ToAggregate(); err != nil {
 		return fmt.Errorf("%v/%v/%v: %v", un.GroupVersionKind().Kind, un.GetName(), un.GetNamespace(), err)
 	}
@@ -68,7 +80,7 @@ func (v *Validator) ValidateCustomResource(o runtime.Object) error {
 	}
 	pruneOpts := structuralschema.UnknownFieldPathOptions{TrackUnknownFieldPaths: true}
 	unknownFieldPaths := structuralpruning.PruneWithOptions(un.DeepCopy().Object, structural, false, pruneOpts)
-	unknownFieldPaths = FilterSliceInPlace(unknownFieldPaths, func(s string) bool {
+	unknownFieldPaths = filterSliceInPlace(unknownFieldPaths, func(s string) bool {
 		// Some CRDs don't spell out all the fields in metadata, and k8s doesn't care
 		return !strings.HasPrefix(s, "metadata.")
 	})
@@ -83,8 +95,8 @@ func (v *Validator) ValidateCustomResource(o runtime.Object) error {
 	return nil
 }
 
-func NewValidatorFromCRDs(crds ...apiextensions.CustomResourceDefinition) (*Validator, error) {
-	v := &Validator{
+func newValidatorFromCRDs(crds ...apiextensions.CustomResourceDefinition) (*validator, error) {
+	v := &validator{
 		byGvk:      map[schema.GroupVersionKind]validation.SchemaCreateValidator{},
 		structural: map[schema.GroupVersionKind]*structuralschema.Structural{},
 		cel:        map[schema.GroupVersionKind]*cel.Validator{},
@@ -140,7 +152,7 @@ func NewValidatorFromCRDs(crds ...apiextensions.CustomResourceDefinition) (*Vali
 // FilterInPlace retains all elements in []E that keep(E) returns true for.
 // The array is *mutated in place* and returned.
 // Use Filter to avoid mutation
-func FilterSliceInPlace[E any](s []E, keep func(E) bool) []E {
+func filterSliceInPlace[E any](s []E, keep func(E) bool) []E {
 	// find the first to filter index
 	i := slices.IndexFunc(s, func(e E) bool {
 		return !keep(e)

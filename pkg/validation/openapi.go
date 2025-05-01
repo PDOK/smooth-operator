@@ -77,7 +77,7 @@ func ApplySchemaDefaults(raw map[string]interface{}) (map[string]interface{}, er
 // AddSchema manually add an OpenAPI schema for a CRD
 func AddValidator(crd string, schema apiextensions.CustomResourceDefinition) {
 	val, _ := newValidatorFromCRDs(schema)
-	validators[schema.Kind] = val
+	validators[schema.Spec.Names.Kind] = val
 }
 
 // LoadSchemaForCRD extracts OpenAPI schemas for a specific CRD from a Kubernetes cluster

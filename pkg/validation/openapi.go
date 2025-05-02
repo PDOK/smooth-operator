@@ -75,9 +75,28 @@ func ApplySchemaDefaults(raw map[string]interface{}) (map[string]interface{}, er
 }
 
 // AddSchema manually add an OpenAPI schema for a CRD
-func AddValidator(crd string, schema apiextensions.CustomResourceDefinition) {
-	val, _ := newValidatorFromCRDs(schema)
+func AddValidator(schema apiextensionsv1.CustomResourceDefinition) error {
+	if schema.Status.StoredVersions == nil {
+		for _, v := range schema.Spec.Versions {
+			if v.Storage {
+				schema.Status.StoredVersions = append(schema.Status.StoredVersions, v.Name)
+			}
+		}
+	}
+
+	crd := &apiextensions.CustomResourceDefinition{}
+	err := apiextensionsv1.Convert_v1_CustomResourceDefinition_To_apiextensions_CustomResourceDefinition(&schema, crd, nil)
+	if err != nil {
+		return err
+	}
+
+	val, err := newValidatorFromCRDs(*crd)
+	if err != nil {
+		return err
+	}
+
 	validators[schema.Spec.Names.Kind] = val
+	return nil
 }
 
 // LoadSchemaForCRD extracts OpenAPI schemas for a specific CRD from a Kubernetes cluster
@@ -92,18 +111,5 @@ func LoadSchemasForCRD(cfg *rest.Config, namespace, name string) error {
 		return err
 	}
 
-	crd := &apiextensions.CustomResourceDefinition{}
-	err = apiextensionsv1.Convert_v1_CustomResourceDefinition_To_apiextensions_CustomResourceDefinition(crdV1, crd, nil)
-	if err != nil {
-		return err
-	}
-
-	val, err := newValidatorFromCRDs(*crd)
-	if err != nil {
-		return err
-	}
-
-	validators[crd.Spec.Names.Kind] = val
-
-	return nil
+	return AddValidator(*crdV1)
 }

@@ -24,3 +24,13 @@ func ValidateBaseURL(baseURL string) error {
 
 	return nil
 }
+
+type BaseUrlProvider interface {
+	GetBaseUrl() string
+}
+
+func CheckBaseUrlImmutability(oldProvider BaseUrlProvider, newProvider BaseUrlProvider, reasons *[]string) {
+	if oldProvider.GetBaseUrl() != newProvider.GetBaseUrl() {
+		*reasons = append(*reasons, "service.baseURL is immutable")
+	}
+}

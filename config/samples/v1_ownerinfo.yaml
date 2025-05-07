@@ -18,6 +18,7 @@ spec:
       type: alternate
   namespaceTemplate: "http://{{prefix}}.geonovum.nl"
   atom:
+    defaultStylesheet: https://service.pdok.nl/atom/style/style.xsl
     author: # author/owner van de dataset
       name: pdok
       email: pdokbeheer@kadaster.nl

@@ -54,6 +54,9 @@ type MetadataURL struct {
 // Atom contains information about the dataset's author/owner
 type Atom struct {
 	Author model.Author `json:"author"`
+
+	// +kubebuilder:validation:Pattern:=`https://.*`
+	DefaultStylesheet *string `json:"defaultStylesheet,omitempty"`
 }
 
 // WFS contains Web Feature Service related information

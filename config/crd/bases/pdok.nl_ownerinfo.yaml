@@ -54,6 +54,9 @@ spec:
                     - email
                     - name
                     type: object
+                  defaultStylesheet:
+                    pattern: https://.*
+                    type: string
                 required:
                 - author
                 type: object

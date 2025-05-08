@@ -8,22 +8,24 @@ import (
 	"crypto/x509/pkix"
 	"encoding/pem"
 	"errors"
+	"fmt"
 	"math/big"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"k8s.io/klog/v2"
 )
 
 type certConfig struct {
-	OrganisationName string
-	ServiceName      string
-	ServiceNameSpace string
-	CertsPath        string
-	CaCert           string
-	ServerCert       string
-	ServerKey        string
+	OrganisationName  string
+	ServiceNames      []string
+	ServiceNameSpaces []string
+	CertsPath         string
+	CaCert            string
+	ServerCert        string
+	ServerKey         string
 }
 
 func newSerialNumber() (*big.Int, error) {
@@ -37,14 +39,41 @@ func newSerialNumber() (*big.Int, error) {
 }
 
 func main() {
+	organisationName := os.Getenv("ORGANISATION_NAME")
+	serviceNamesString := os.Getenv("SERVICE_NAMES")
+	serviceNameSpacesString := os.Getenv("SERVICE_NAMESPACES")
+	certsPath := os.Getenv("CERTS_PATH")
+	caCert := os.Getenv("CA_CERT")
+	serverCert := os.Getenv("SERVER_CERT")
+	serverKey := os.Getenv("SERVER_KEY")
+
+	serviceNames := strings.Split(serviceNamesString, ",")
+	serviceNameSpaces := strings.Split(serviceNameSpacesString, ",")
+
+	if len(serviceNames) == 1 && serviceNames[0] == "" {
+		serviceNames = []string{}
+	}
+
+	if len(serviceNameSpaces) == 1 && serviceNameSpaces[0] == "" {
+		serviceNameSpaces = []string{}
+	}
+
+	for i, serviceName := range serviceNames {
+		serviceNames[i] = strings.TrimSpace(serviceName)
+	}
+
+	for i, serviceNameSpace := range serviceNameSpaces {
+		serviceNameSpaces[i] = strings.TrimSpace(serviceNameSpace)
+	}
+
 	myCertConfig := certConfig{
-		OrganisationName: "a",
-		ServiceName:      "b",
-		ServiceNameSpace: "c",
-		CertsPath:        "./",
-		CaCert:           "d",
-		ServerCert:       "e",
-		ServerKey:        "f",
+		OrganisationName:  organisationName,
+		ServiceNames:      serviceNames,
+		ServiceNameSpaces: serviceNameSpaces,
+		CertsPath:         certsPath,
+		CaCert:            caCert,
+		ServerCert:        serverCert,
+		ServerKey:         serverKey,
 	}
 	err := generateCerts(myCertConfig)
 	if err != nil {
@@ -55,6 +84,10 @@ func main() {
 }
 
 func generateCerts(config certConfig) error {
+	err := config.validateCertConfig()
+	if err != nil {
+		return err
+	}
 
 	klog.V(1).Infof("generating certificates")
 
@@ -91,11 +124,15 @@ func generateCerts(config certConfig) error {
 
 	klog.V(4).Infof("generating config for server certificate")
 
-	dnsNames := []string{
-		config.ServiceName,
-		config.ServiceName + "." + config.ServiceNameSpace,
-		config.ServiceName + "." + config.ServiceNameSpace + ".svc",
+	dnsNames := []string{}
+	for _, serviceName := range config.ServiceNames {
+		dnsNames = append(dnsNames, serviceName)
+		for _, namespace := range config.ServiceNameSpaces {
+			dnsNames = append(dnsNames, serviceName+"."+namespace)
+			dnsNames = append(dnsNames, serviceName, "."+namespace+".svc")
+		}
 	}
+
 	serialNumber, err = newSerialNumber()
 	if err != nil {
 		return err
@@ -193,4 +230,39 @@ func writeFile(filepath string, sCert *bytes.Buffer) error {
 		return err
 	}
 	return nil
+}
+
+func (c *certConfig) validateCertConfig() error {
+	if c.OrganisationName == "" {
+		return getErrorWithMissingMessage("ORGANISATION_NAME")
+	}
+
+	if len(c.ServiceNames) == 0 {
+		return errors.New("SERVICE_NAMES cannot be empty, at least one service required, comma separated")
+	}
+
+	if len(c.ServiceNameSpaces) == 0 {
+		return errors.New("SERVICE_NAMESPACES cannot be empty, at least one service required, comma separated")
+	}
+
+	if c.CertsPath == "" {
+		return getErrorWithMissingMessage("CERTS_PATH")
+	}
+
+	if c.CaCert == "" {
+		return getErrorWithMissingMessage("CA_CERT")
+	}
+
+	if c.ServerCert == "" {
+		return getErrorWithMissingMessage("SERVER_CERT")
+	}
+
+	if c.ServerKey == "" {
+		return getErrorWithMissingMessage("SERVER_KEY")
+	}
+	return nil
+}
+
+func getErrorWithMissingMessage(fieldName string) error {
+	return errors.New(fmt.Sprintf("Field '%s' was unexpectedly empty", fieldName))
 }

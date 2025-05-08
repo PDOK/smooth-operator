@@ -55,7 +55,7 @@ type MetadataURL struct {
 type Atom struct {
 	Author model.Author `json:"author"`
 
-	// +kubebuilder:validation:Pattern:=`https://.*`
+	// +kubebuilder:validation:Pattern:=`https://.*|http://localhost.*`
 	DefaultStylesheet *string `json:"defaultStylesheet,omitempty"`
 }
 

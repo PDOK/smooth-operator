@@ -129,7 +129,7 @@ func generateCerts(config certConfig) error {
 		dnsNames = append(dnsNames, serviceName)
 		for _, namespace := range config.ServiceNameSpaces {
 			dnsNames = append(dnsNames, serviceName+"."+namespace)
-			dnsNames = append(dnsNames, serviceName, "."+namespace+".svc")
+			dnsNames = append(dnsNames, serviceName+"."+namespace+".svc")
 		}
 	}
 

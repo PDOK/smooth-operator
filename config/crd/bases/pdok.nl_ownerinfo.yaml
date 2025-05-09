@@ -55,7 +55,7 @@ spec:
                     - name
                     type: object
                   defaultStylesheet:
-                    pattern: https://.*
+                    pattern: ^https?://.+
                     type: string
                 required:
                 - author

@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	validURLRegexp = regexp.MustCompile(`^https?://.+$`) // https://regex101.com/r/IvhP6H/1
+	validURLRegexp = regexp.MustCompile(`^https?://.+/.+$`)
 )
 
 // URL Custom net.URL compatible with YAML and JSON (un)marshalling and kubebuilder.
@@ -19,7 +19,7 @@ var (
 // append a longer path without having to worry about double slashes.
 //
 // Allow only http/https URLs or environment variables like ${FOOBAR}
-// +kubebuilder:validation:Pattern=`^https?://.+`
+// +kubebuilder:validation:Pattern=`^https?://.+/.+`
 // +kubebuilder:validation:Type=string
 type URL struct {
 	// This is a pointer so the wrapper can directly be used in templates, e.g.: {{ .Config.BaseURL }}

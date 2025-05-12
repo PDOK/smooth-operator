@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+
+	"k8s.io/apimachinery/pkg/util/validation/field"
 )
 
 // ValidateBaseURL
@@ -29,8 +31,11 @@ type BaseUrlProvider interface {
 	GetBaseUrl() string
 }
 
-func CheckBaseUrlImmutability(oldProvider BaseUrlProvider, newProvider BaseUrlProvider, reasons *[]string) {
+func CheckBaseUrlImmutability(oldProvider BaseUrlProvider, newProvider BaseUrlProvider, allErrs *field.ErrorList) {
 	if oldProvider.GetBaseUrl() != newProvider.GetBaseUrl() {
-		*reasons = append(*reasons, "service.baseURL is immutable")
+		*allErrs = append(*allErrs, field.Forbidden(
+			field.NewPath("spec").Child("service").Child("baseURL"),
+			"is immutable",
+		))
 	}
 }

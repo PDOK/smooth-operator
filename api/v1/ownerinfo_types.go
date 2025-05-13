@@ -55,8 +55,7 @@ type MetadataURL struct {
 type Atom struct {
 	Author model.Author `json:"author"`
 
-	// +kubebuilder:validation:Pattern:=`https://.*|http://localhost.*`
-	DefaultStylesheet *string `json:"defaultStylesheet,omitempty"`
+	DefaultStylesheet *model.URL `json:"defaultStylesheet,omitempty"`
 }
 
 // WFS contains Web Feature Service related information

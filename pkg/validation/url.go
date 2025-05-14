@@ -3,6 +3,7 @@ package validation
 import (
 	"errors"
 	"fmt"
+	"github.com/pdok/smooth-operator/model"
 	"net/url"
 
 	"k8s.io/apimachinery/pkg/util/validation/field"
@@ -27,14 +28,13 @@ func ValidateBaseURL(baseURL string) error {
 	return nil
 }
 
-type BaseUrlProvider interface {
-	GetBaseUrl() string
-}
-
-func CheckBaseUrlImmutability(oldProvider BaseUrlProvider, newProvider BaseUrlProvider, allErrs *field.ErrorList) {
-	if oldProvider.GetBaseUrl() != newProvider.GetBaseUrl() {
+func CheckUrlImmutability(oldURL, newURL model.URL, allErrs *field.ErrorList, path *field.Path) {
+	if oldURL.URL == nil && newURL.URL == nil {
+		return
+	}
+	if (oldURL.URL == nil && newURL.URL != nil) || (oldURL.URL != nil && newURL.URL == nil) || (*oldURL.URL != *newURL.URL) {
 		*allErrs = append(*allErrs, field.Forbidden(
-			field.NewPath("spec").Child("service").Child("baseURL"),
+			path,
 			"is immutable",
 		))
 	}

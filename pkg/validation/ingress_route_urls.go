@@ -2,6 +2,7 @@ package validation
 
 import (
 	"fmt"
+
 	"github.com/pdok/smooth-operator/model"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 )

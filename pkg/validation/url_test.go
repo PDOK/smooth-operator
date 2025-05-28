@@ -1,10 +1,11 @@
 package validation
 
 import (
+	"testing"
+
 	"github.com/pdok/smooth-operator/model"
 	"github.com/stretchr/testify/assert"
 	"k8s.io/apimachinery/pkg/util/validation/field"
-	"testing"
 )
 
 func TestCheckUrlImmutability(t *testing.T) {
@@ -64,7 +65,7 @@ func TestCheckUrlImmutability(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			allErrs := field.ErrorList{}
-			CheckUrlImmutability(tt.args.oldURL, tt.args.newURL, &allErrs, nil)
+			CheckURLImmutability(tt.args.oldURL, tt.args.newURL, &allErrs, nil)
 			if tt.wantErr {
 				assert.NotEmpty(t, allErrs)
 			} else {

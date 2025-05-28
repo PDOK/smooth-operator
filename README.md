@@ -4,13 +4,11 @@
     </a>
 </p>
 
-# Smooth Operator
+# Smooth Operator Library
 This repository contains code shared by the Kubernetes operators developed by [PDOK](https://www.pdok.nl/). There are no executable programs present in this codebase. 
 The goal of this repository is to support the development work of PDOK, but it can also be used as a starter to develop custom map related operators. At the moment the following operators have this repository as a basis: 
 - [Atom operator](https://github.com/PDOK/atom-operator), an operator for deploying atomfeed instances
 - [Mapserver operator](https://github.com/PDOK/mapserver-operator), an operator for deploying mapserver instances
-
-Although this repository is oriented towards geoinformation related operators, it can be used as a base for non-geoinformation operators.
 
 # Usage
 This project does not contain any executable files and is only used as a basis for Kubernetes operators.

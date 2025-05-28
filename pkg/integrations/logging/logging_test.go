@@ -1,11 +1,13 @@
 package logging
 
 import (
-	"go.uber.org/zap/zapcore"
 	"testing"
+
+	"go.uber.org/zap/zapcore"
 )
 
 func TestLogger(t *testing.T) {
+	_ = t
 	logger, err := SetupLogger("myOperator", "", zapcore.InfoLevel)
 	if err != nil {
 		panic(err)

@@ -7,35 +7,35 @@ import (
 	"strings"
 )
 
-type SlackRequest struct {
-	Attachments []SlackElement `json:"attachments"`
-	Text        *string        `json:"text,omitempty"`
+type Request struct {
+	Attachments []Element `json:"attachments"`
+	Text        *string   `json:"text,omitempty"`
 }
 
-type SlackElement struct {
-	Color  string       `json:"color"`
-	Blocks []SlackBlock `json:"blocks"`
+type Element struct {
+	Color  string  `json:"color"`
+	Blocks []Block `json:"blocks"`
 }
 
-type SlackBlock struct {
-	Type   string            `json:"type"`
-	Text   SlackValueBlock   `json:"text"`
-	Fields []SlackValueBlock `json:"fields"`
+type Block struct {
+	Type   string       `json:"type"`
+	Text   ValueBlock   `json:"text"`
+	Fields []ValueBlock `json:"fields"`
 }
 
-type SlackValueBlock struct {
+type ValueBlock struct {
 	Type string `json:"type"`
 	Text string `json:"text"`
 }
 
-func GetSlackBlock(generalMessage string, jobUrl string, color string, datasetName string) SlackRequest {
-	var slackBlock = SlackBlock{
+func GetSlackBlock(generalMessage string, jobURL string, color string, datasetName string) Request {
+	var slackBlock = Block{
 		Type: "section",
-		Text: SlackValueBlock{
+		Text: ValueBlock{
 			Type: "mrkdwn",
 			Text: generalMessage,
 		},
-		Fields: []SlackValueBlock{{
+		Fields: []ValueBlock{{
 			Type: "mrkdwn",
 			Text: "*Dataset*",
 		}, {
@@ -46,28 +46,28 @@ func GetSlackBlock(generalMessage string, jobUrl string, color string, datasetNa
 			Text: datasetName,
 		}, {
 			Type: "mrkdwn",
-			Text: jobUrl,
+			Text: jobURL,
 		}},
 	}
 
-	slackElement := SlackElement{
+	slackElement := Element{
 		Color:  color,
-		Blocks: []SlackBlock{slackBlock},
+		Blocks: []Block{slackBlock},
 	}
 
-	return SlackRequest{
-		Attachments: []SlackElement{slackElement},
+	return Request{
+		Attachments: []Element{slackElement},
 	}
 }
 
-func GetSlackErrorMessage(message string, bundle string, color string) SlackRequest {
-	var slackBlock = SlackBlock{
+func GetSlackErrorMessage(message string, bundle string, color string) Request {
+	var slackBlock = Block{
 		Type: "section",
-		Text: SlackValueBlock{
+		Text: ValueBlock{
 			Type: "mrkdwn",
 			Text: message,
 		},
-		Fields: []SlackValueBlock{{
+		Fields: []ValueBlock{{
 			Type: "mrkdwn",
 			Text: "*Bundle*",
 		}, {
@@ -76,29 +76,29 @@ func GetSlackErrorMessage(message string, bundle string, color string) SlackRequ
 		}},
 	}
 
-	slackElement := SlackElement{
+	slackElement := Element{
 		Color:  color,
-		Blocks: []SlackBlock{slackBlock},
+		Blocks: []Block{slackBlock},
 	}
 
-	return SlackRequest{
-		Attachments: []SlackElement{slackElement},
+	return Request{
+		Attachments: []Element{slackElement},
 	}
 }
 
-func GetSimpleSlackErrorMessage(message string) SlackRequest {
-	return SlackRequest{
+func GetSimpleSlackErrorMessage(message string) Request {
+	return Request{
 		Attachments: nil,
 		Text:        &message,
 	}
 }
 
-func SendSlackRequest(slackRequest SlackRequest, slackUrl string) error {
+func SendSlackRequest(slackRequest Request, slackURL string) error {
 	marshalled, err := json.Marshal(slackRequest)
 	if err != nil {
 		return err
 	}
-	response, err := http.DefaultClient.Post(slackUrl, "application/json", strings.NewReader(string(marshalled)))
+	response, err := http.DefaultClient.Post(slackURL, "application/json", strings.NewReader(string(marshalled)))
 	if err != nil {
 		return err
 	}
@@ -106,19 +106,22 @@ func SendSlackRequest(slackRequest SlackRequest, slackUrl string) error {
 	return nil
 }
 
-type SlackZapWriter struct {
+type ZapWriter struct {
 	OperatorName    string
-	SlackWebhookUrl string
+	SlackWebhookURL string
 }
 
-func (slackWriter *SlackZapWriter) Sync() error {
+func (slackWriter *ZapWriter) Sync() error {
 	return nil
 }
 
-func (slackWriter *SlackZapWriter) Write(p []byte) (n int, err error) {
-	if slackWriter.SlackWebhookUrl != "" {
+func (slackWriter *ZapWriter) Write(p []byte) (n int, err error) {
+	if slackWriter.SlackWebhookURL != "" {
 		slackRequest := GetSimpleSlackErrorMessage(fmt.Sprintf("%s: %s", slackWriter.OperatorName, string(p)))
-		SendSlackRequest(slackRequest, slackWriter.SlackWebhookUrl)
+		err = SendSlackRequest(slackRequest, slackWriter.SlackWebhookURL)
+		if err != nil {
+			return
+		}
 	}
 	return len(p), nil
 }

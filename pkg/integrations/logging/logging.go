@@ -14,14 +14,14 @@ func (s StdoutWriter) Write(p []byte) (n int, err error) {
 	return len(p), nil
 }
 
-func SetupLogger(operatorName string, slackWebhookUrl string, minLogLevel zapcore.LevelEnabler) (*zap.Logger, error) {
+func SetupLogger(operatorName string, slackWebhookURL string, minLogLevel zapcore.LevelEnabler) (*zap.Logger, error) {
 	// Standard output writer
 	stdoutSyncer := zapcore.Lock(zapcore.AddSync(StdoutWriter{}))
 
 	// Slack writer for errors
-	slackSyncer := zapcore.Lock(zapcore.AddSync(&slack.SlackZapWriter{
+	slackSyncer := zapcore.Lock(zapcore.AddSync(&slack.ZapWriter{
 		OperatorName:    operatorName,
-		SlackWebhookUrl: slackWebhookUrl,
+		SlackWebhookURL: slackWebhookURL,
 	}))
 
 	// Encoder configuration for human-readable output

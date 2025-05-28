@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+
 	"k8s.io/apiextensions-apiserver/pkg/apis/apiextensions"
 	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	"k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
@@ -29,9 +30,8 @@ func ValidateSchema(yamlString string) error {
 	}
 	if val, ok := validators[kind.(string)]; ok {
 		return val.ValidateCustomResourceYAML(yamlString)
-	} else {
-		return fmt.Errorf("no schemas found for CRD '%v'", kind)
 	}
+	return fmt.Errorf("no schemas found for CRD '%v'", kind)
 }
 
 func ApplySchemaDefaultsStr(yamlString string) (string, error) {
@@ -69,9 +69,8 @@ func ApplySchemaDefaults(raw map[string]interface{}) (map[string]interface{}, er
 		}
 
 		return data.Object, nil
-	} else {
-		return raw, fmt.Errorf("no schemas found for CRD '%v'", kind)
 	}
+	return raw, fmt.Errorf("no schemas found for CRD '%v'", kind)
 }
 
 // AddSchema manually add an OpenAPI schema for a CRD
@@ -101,6 +100,7 @@ func AddValidator(schema apiextensionsv1.CustomResourceDefinition) error {
 
 // LoadSchemaForCRD extracts OpenAPI schemas for a specific CRD from a Kubernetes cluster
 func LoadSchemasForCRD(cfg *rest.Config, namespace, name string) error {
+	_ = namespace
 	crdClientSet, err := clientset.NewForConfig(cfg)
 	if err != nil {
 		return err

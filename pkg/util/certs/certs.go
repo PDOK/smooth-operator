@@ -124,15 +124,7 @@ func generateCerts(config certConfig) error {
 
 	klog.V(4).Infof("generating config for server certificate")
 
-	dnsNames := []string{}
-	for _, serviceName := range config.ServiceNames {
-		dnsNames = append(dnsNames, serviceName)
-		for _, namespace := range config.ServiceNameSpaces {
-			dnsNames = append(dnsNames, serviceName+"."+namespace)
-			dnsNames = append(dnsNames, serviceName+"."+namespace+".svc")
-		}
-	}
-
+	dnsNames := getDNSNames(config)
 	serialNumber, err = newSerialNumber()
 	if err != nil {
 		return err
@@ -151,7 +143,34 @@ func generateCerts(config certConfig) error {
 		ExtKeyUsage:  []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth, x509.ExtKeyUsageServerAuth},
 		KeyUsage:     x509.KeyUsageDigitalSignature,
 	}
+	err = writeFiles(config, serverConfig, caConfig, caPrivateKey, caCert)
+	return err
+}
 
+func getDNSNames(certConfig certConfig) []string {
+	result := make([]string, 0)
+	for _, serviceName := range certConfig.ServiceNames {
+		result = append(result, serviceName)
+		for _, namespace := range certConfig.ServiceNameSpaces {
+			result = append(result, serviceName+"."+namespace)
+			result = append(result, serviceName+"."+namespace+".svc")
+		}
+	}
+	return result
+}
+
+func checkCertsPath(certsPath string) error {
+	_, err := os.Stat(certsPath)
+	if os.IsNotExist(err) {
+		err = os.MkdirAll(certsPath, os.ModePerm)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func writeFiles(config certConfig, serverConfig *x509.Certificate, caConfig *x509.Certificate, caPrivateKey *rsa.PrivateKey, caCert []byte) error {
 	klog.V(4).Infof("generating server private key")
 	serverPrivateKey, err := rsa.GenerateKey(rand.Reader, 4096)
 	if err != nil {
@@ -193,11 +212,9 @@ func generateCerts(config certConfig) error {
 	}
 
 	klog.V(4).Infof("writing ca certificate: %s, service certificate: %s, server private key: %s, to folder: %s", config.CaCert, config.ServerCert, config.ServerKey, config.CertsPath)
-	if _, err := os.Stat(config.CertsPath); os.IsNotExist(err) {
-		err = os.MkdirAll(config.CertsPath, os.ModePerm)
-		if err != nil {
-			return err
-		}
+	err = checkCertsPath(config.CertsPath)
+	if err != nil {
+		return err
 	}
 
 	err = writeFile(filepath.Join(config.CertsPath, config.CaCert), caPem)
@@ -214,7 +231,6 @@ func generateCerts(config certConfig) error {
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
 
@@ -264,5 +280,5 @@ func (c *certConfig) validateCertConfig() error {
 }
 
 func getErrorWithMissingMessage(fieldName string) error {
-	return errors.New(fmt.Sprintf("Field '%s' was unexpectedly empty", fieldName))
+	return fmt.Errorf("Field '%s' was unexpectedly empty", fieldName)
 }

@@ -6,7 +6,11 @@ package validation
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"slices"
+	"strings"
+
 	"k8s.io/apiextensions-apiserver/pkg/apis/apiextensions"
 	apiextval "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/validation"
 	structuralschema "k8s.io/apiextensions-apiserver/pkg/apiserver/schema"
@@ -20,8 +24,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	celconfig "k8s.io/apiserver/pkg/apis/cel"
 	"sigs.k8s.io/yaml"
-	"slices"
-	"strings"
 )
 
 // Validator returns a new validator for custom resources
@@ -66,17 +68,17 @@ func (v *validator) ValidateCustomResource(o runtime.Object) error {
 	}
 
 	un := &unstructured.Unstructured{Object: content}
-	vd, _ := v.byGvk[un.GroupVersionKind()]
+	vd := v.byGvk[un.GroupVersionKind()]
 	err = v.ApplyDefaults(un)
 	if err != nil {
 		return err
 	}
 	structural := v.structural[un.GroupVersionKind()]
 	if err := validation.ValidateCustomResource(nil, un.Object, vd).ToAggregate(); err != nil {
-		return fmt.Errorf("%v/%v/%v: %v", un.GroupVersionKind().Kind, un.GetName(), un.GetNamespace(), err)
+		return fmt.Errorf("%v/%v/%v: %w", un.GroupVersionKind().Kind, un.GetName(), un.GetNamespace(), err)
 	}
 	if err := structurallisttype.ValidateListSetsAndMaps(nil, structural, un.Object).ToAggregate(); err != nil {
-		return fmt.Errorf("%v/%v/%v: %v", un.GroupVersionKind().Kind, un.GetName(), un.GetNamespace(), err)
+		return fmt.Errorf("%v/%v/%v: %w", un.GroupVersionKind().Kind, un.GetName(), un.GetNamespace(), err)
 	}
 	pruneOpts := structuralschema.UnknownFieldPathOptions{TrackUnknownFieldPaths: true}
 	unknownFieldPaths := structuralpruning.PruneWithOptions(un.DeepCopy().Object, structural, false, pruneOpts)
@@ -104,14 +106,12 @@ func newValidatorFromCRDs(crds ...apiextensions.CustomResourceDefinition) (*vali
 	for _, crd := range crds {
 		versions := crd.Spec.Versions
 		if len(versions) == 0 {
-			versions = []apiextensions.CustomResourceDefinitionVersion{{Name: crd.Spec.Version}} // nolint: staticcheck
+			versions = []apiextensions.CustomResourceDefinitionVersion{{Name: crd.Spec.Version}}
 		}
-		//crd.Status.StoredVersions = slices.Map(versions, func(e apiextensions.CustomResourceDefinitionVersion) string {
-		//	return e.Name
-		//})
+
 		errs := apiextval.ValidateCustomResourceDefinition(context.Background(), &crd)
 		if len(errs) > 0 {
-			return nil, fmt.Errorf("CRD %v is not valid: %v", crd.Name, errs.ToAggregate())
+			return nil, fmt.Errorf("CRD %v is not valid: %w", crd.Name, errs.ToAggregate())
 		}
 		for _, ver := range versions {
 			gvk := schema.GroupVersionKind{
@@ -124,7 +124,7 @@ func newValidatorFromCRDs(crds ...apiextensions.CustomResourceDefinition) (*vali
 				crdSchema = crd.Spec.Validation
 			}
 			if crdSchema == nil {
-				return nil, fmt.Errorf("crd did not have validation defined")
+				return nil, errors.New("crd did not have validation defined")
 			}
 
 			schemaValidator, _, err := validation.NewSchemaValidator(crdSchema.OpenAPIV3Schema)

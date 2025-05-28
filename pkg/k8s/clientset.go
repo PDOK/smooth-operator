@@ -3,9 +3,10 @@ package k8s
 import (
 	"context"
 	"errors"
+	"strings"
+
 	v1 "k8s.io/api/core/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"strings"
 )
 
 func GetConfigMap(k8sClient client.Client, namespace, prefix string, labels map[string]string) (*v1.ConfigMap, error) {

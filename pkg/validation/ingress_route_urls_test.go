@@ -1,10 +1,11 @@
 package validation
 
 import (
+	"testing"
+
 	"github.com/pdok/smooth-operator/model"
 	"github.com/stretchr/testify/assert"
 	"k8s.io/apimachinery/pkg/util/validation/field"
-	"testing"
 )
 
 func TestURLsContainsBaseURL(t *testing.T) {

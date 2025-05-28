@@ -3,9 +3,9 @@ package validation
 import (
 	"errors"
 	"fmt"
-	"github.com/pdok/smooth-operator/model"
 	"net/url"
 
+	"github.com/pdok/smooth-operator/model"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 )
 
@@ -28,7 +28,17 @@ func ValidateBaseURL(baseURL string) error {
 	return nil
 }
 
-func CheckUrlImmutability(oldURL, newURL model.URL, allErrs *field.ErrorList, path *field.Path) {
+type BaseURLProvider interface {
+	GetBaseUrl() string
+}
+
+func CheckBaseURLImmutability(oldProvider BaseURLProvider, newProvider BaseURLProvider, reasons *[]string) {
+	if oldProvider.GetBaseUrl() != newProvider.GetBaseUrl() {
+		*reasons = append(*reasons, "service.baseURL is immutable")
+	}
+}
+
+func CheckURLImmutability(oldURL, newURL model.URL, allErrs *field.ErrorList, path *field.Path) {
 	if oldURL.URL == nil && newURL.URL == nil {
 		return
 	}

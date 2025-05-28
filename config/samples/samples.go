@@ -2,6 +2,7 @@ package samples
 
 import (
 	_ "embed"
+
 	v1 "github.com/pdok/smooth-operator/api/v1"
 	"sigs.k8s.io/yaml"
 )

@@ -47,15 +47,19 @@ spec:
                       or dataset
                     properties:
                       email:
+                        description: Email of the author
+                        format: email
                         type: string
                       name:
+                        description: Name of the author
+                        minLength: 1
                         type: string
                     required:
                     - email
                     - name
                     type: object
                   defaultStylesheet:
-                    pattern: https://.*
+                    pattern: ^https?://.+/.+
                     type: string
                 required:
                 - author

@@ -32,5 +32,16 @@ type BaseURLProvider interface {
 func CheckBaseURLImmutability(oldProvider BaseURLProvider, newProvider BaseURLProvider, reasons *[]string) {
 	if oldProvider.GetBaseUrl() != newProvider.GetBaseUrl() {
 		*reasons = append(*reasons, "service.baseURL is immutable")
+
+}
+func CheckUrlImmutability(oldURL, newURL model.URL, allErrs *field.ErrorList, path *field.Path) {
+	if oldURL.URL == nil && newURL.URL == nil {
+		return
+	}
+	if (oldURL.URL == nil && newURL.URL != nil) || (oldURL.URL != nil && newURL.URL == nil) || (*oldURL.URL != *newURL.URL) {
+		*allErrs = append(*allErrs, field.Forbidden(
+			path,
+			"is immutable",
+		))
 	}
 }

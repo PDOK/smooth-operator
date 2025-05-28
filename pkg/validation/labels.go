@@ -1,16 +1,14 @@
 package validation
 
 import (
-	"errors"
-	"fmt"
-	"strings"
+	"k8s.io/apimachinery/pkg/util/validation/field"
 )
 
 // ValidateLabelsOnCCreate
 // Checks labels on creation
-func ValidateLabelsOnCreate(labels map[string]string) error {
+func ValidateLabelsOnCreate(labels map[string]string) *field.Error {
 	if len(labels) == 0 {
-		return errors.New("labels must not be empty")
+		return field.Required(field.NewPath("metadata").Child("labels"), "can't be empty")
 	}
 
 	return nil
@@ -18,26 +16,20 @@ func ValidateLabelsOnCreate(labels map[string]string) error {
 
 // ValidateLabelsOnUpdate
 // Checks if the old and new label set are exactly the same
-func ValidateLabelsOnUpdate(oldLabels, newLabels map[string]string) error {
-	reasons := make([]string, 0)
+func ValidateLabelsOnUpdate(oldLabels, newLabels map[string]string, allErrs *field.ErrorList) {
+	fieldPath := field.NewPath("metadata").Child("labels")
 	for oldKey, oldValue := range oldLabels {
 		newValue, ok := newLabels[oldKey]
 		if !ok {
-			reasons = append(reasons, fmt.Sprintf("label '%s' removed", oldKey))
+			*allErrs = append(*allErrs, field.Required(fieldPath.Child(oldKey), "labels cannot be removed"))
 		} else if oldValue != newValue {
-			reasons = append(reasons, fmt.Sprintf("label '%s' changed from '%s' to '%s'", oldKey, oldValue, newValue))
+			*allErrs = append(*allErrs, field.Invalid(fieldPath.Child(oldKey), newValue, "immutable: should be "+oldValue))
 		}
 	}
 
 	for newKey := range newLabels {
 		if _, ok := oldLabels[newKey]; !ok {
-			reasons = append(reasons, fmt.Sprintf("label '%s' added", newKey))
+			*allErrs = append(*allErrs, field.Forbidden(fieldPath.Child(newKey), "new labels cannot be added"))
 		}
 	}
-
-	if len(reasons) > 0 {
-		return fmt.Errorf("labels are immutable. %s", strings.Join(reasons, ", "))
-	}
-
-	return nil
 }

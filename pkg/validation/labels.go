@@ -23,7 +23,7 @@ func ValidateLabelsOnUpdate(oldLabels, newLabels map[string]string, allErrs *fie
 		if !ok {
 			*allErrs = append(*allErrs, field.Required(fieldPath.Child(oldKey), "labels cannot be removed"))
 		} else if oldValue != newValue {
-			*allErrs = append(*allErrs, field.Invalid(fieldPath.Child(oldKey), newValue, "immutable: should be "+oldValue))
+			*allErrs = append(*allErrs, field.Invalid(fieldPath.Child(oldKey), newValue, "immutable: should be: "+oldValue))
 		}
 	}
 

@@ -22,7 +22,7 @@ func ValidateIngressRouteURLsContainsBaseURL(urls model.IngressRouteURLs, baseUR
 		}
 	}
 
-	return field.Invalid(path, urls, fmt.Sprintf("must contain baseURL: %s", baseURL))
+	return field.Invalid(path, fmt.Sprint(urls), fmt.Sprintf("must contain baseURL: %s", baseURL))
 }
 
 func ValidateIngressRouteURLsNotRemoved(oldURLs, newURLs model.IngressRouteURLs, allErrs *field.ErrorList, path *field.Path) {
@@ -42,7 +42,7 @@ func ValidateIngressRouteURLsNotRemoved(oldURLs, newURLs model.IngressRouteURLs,
 		}
 
 		if !found {
-			*allErrs = append(*allErrs, field.Invalid(path, newURLs, fmt.Sprintf("urls cannot be removed: %s", url)))
+			*allErrs = append(*allErrs, field.Invalid(path, fmt.Sprint(newURLs), fmt.Sprintf("urls cannot be removed, missing: %s", url)))
 		}
 	}
 }

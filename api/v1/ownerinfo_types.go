@@ -30,18 +30,20 @@ import (
 )
 
 // OwnerInfoSpec defines the desired state of OwnerInfo.
+// +kubebuilder:validation:XValidation:message="providerSite is required when using wms or wfs",rule="(!has(self.wms) && !has(self.wfs)) || has(self.providerSite)"
 type OwnerInfoSpec struct {
 	MetadataUrls      *MetadataUrls `json:"metadataUrls,omitempty"`
 	Atom              *Atom         `json:"atom,omitempty"`
 	WFS               *WFS          `json:"wfs,omitempty"`
 	WMS               *WMS          `json:"wms,omitempty"`
 	NamespaceTemplate *string       `json:"namespaceTemplate,omitempty"`
+	ProviderSite      *ProviderSite `json:"providerSite,omitempty"`
 }
 
 // MetadataUrls contains various URL templates for metadata access
 type MetadataUrls struct {
 	CSW        *MetadataURL `json:"csw,omitempty"`
-	OpenSearch *MetadataURL `json:"opensearch,omitempty"`
+	OpenSearch *MetadataURL `json:"openSearch,omitempty"`
 	HTML       *MetadataURL `json:"html,omitempty"`
 }
 
@@ -60,13 +62,12 @@ type Atom struct {
 
 // WFS contains Web Feature Service related information
 type WFS struct {
-	ServiceProvider ServiceProvider `json:"serviceprovider"`
+	ServiceProvider ServiceProvider `json:"serviceProvider"`
 }
 
 // ServiceProvider describes the provider of the WFS service
 type ServiceProvider struct {
-	ProviderName   *string         `json:"providername,omitempty"`
-	ProviderSite   *ProviderSite   `json:"providersite,omitempty"`
+	ProviderName   *string         `json:"providerName,omitempty"`
 	ServiceContact *ServiceContact `json:"servicecontact,omitempty"`
 }
 
@@ -78,9 +79,9 @@ type ProviderSite struct {
 
 // ServiceContact provides contact information for the service
 type ServiceContact struct {
-	IndividualName *string      `json:"individualname,omitempty"`
-	PositionName   *string      `json:"positionname,omitempty"`
-	ContactInfo    *ContactInfo `json:"contactinfo,omitempty"`
+	IndividualName *string      `json:"individualName,omitempty"`
+	PositionName   *string      `json:"positionName,omitempty"`
+	ContactInfo    *ContactInfo `json:"contactInfo,omitempty"`
 	Role           *string      `json:"role,omitempty"`
 }
 
@@ -89,25 +90,25 @@ type ContactInfo struct {
 	Text                *string         `json:"text,omitempty"`
 	Phone               *Phone          `json:"phone,omitempty"`
 	Address             *Address        `json:"address,omitempty"`
-	OnlineResource      *OnlineResource `json:"onlineresource,omitempty"`
-	HoursOfService      *string         `json:"hoursofservice,omitempty"`
-	ContactInstructions *string         `json:"contactinstructions,omitempty"`
+	OnlineResource      *OnlineResource `json:"onlineResource,omitempty"`
+	HoursOfService      *string         `json:"hoursOfService,omitempty"`
+	ContactInstructions *string         `json:"contactInstructions,omitempty"`
 }
 
 // Phone contains voice and facsimile numbers
 type Phone struct {
 	Voice     *string `json:"voice,omitempty"`
-	Facsimile *string `json:"facsmile,omitempty"`
+	Facsimile *string `json:"facsimile,omitempty"`
 }
 
 // Address provides physical address details
 type Address struct {
-	DeliveryPoint         *string `json:"deliverypoint,omitempty"`
+	DeliveryPoint         *string `json:"deliveryPoint,omitempty"`
 	City                  *string `json:"city,omitempty"`
-	AdministrativeArea    *string `json:"administrativearea,omitempty"`
-	PostalCode            *string `json:"postalcode,omitempty"`
+	AdministrativeArea    *string `json:"administrativeArea,omitempty"`
+	PostalCode            *string `json:"postalCode,omitempty"`
 	Country               *string `json:"country,omitempty"`
-	ElectronicMailAddress *string `json:"electronicmailaddress,omitempty"`
+	ElectronicMailAddress *string `json:"electronicMailAddress,omitempty"`
 }
 
 // OnlineResource describes an online resource associated with the contact
@@ -118,32 +119,32 @@ type OnlineResource struct {
 
 // WMS contains Web Map Service related information
 type WMS struct {
-	ContactInformation ContactInformation `json:"contactinformation"`
+	ContactInformation ContactInformation `json:"contactInformation"`
 }
 
 // Information about a contact person for the service
 type ContactInformation struct {
-	ContactPersonPrimary         *ContactPersonPrimary `json:"contactpersonprimary,omitempty"`
-	ContactPosition              *string               `json:"contactposition,omitempty"`
-	ContactAddress               *ContactAddress       `json:"contactaddress,omitempty"`
-	ContactVoiceTelephone        *string               `json:"contactvoicetelephone,omitempty"`
-	ContactFacsimileTelephone    *string               `json:"contactfacsimiletelephone,omitempty"`
-	ContactElectronicMailAddress *string               `json:"contactelectronicmailAddress,omitempty"`
+	ContactPersonPrimary         *ContactPersonPrimary `json:"contactPersonPrimary,omitempty"`
+	ContactPosition              *string               `json:"contactPosition,omitempty"`
+	ContactAddress               *ContactAddress       `json:"contactAddress,omitempty"`
+	ContactVoiceTelephone        *string               `json:"contactVoiceTelephone,omitempty"`
+	ContactFacsimileTelephone    *string               `json:"contactFacsimileTelephone,omitempty"`
+	ContactElectronicMailAddress *string               `json:"contactElectronicMailAddress,omitempty"`
 }
 
 // The primary contact person
 type ContactPersonPrimary struct {
-	ContactPerson       *string `json:"contactperson,omitempty"`
-	ContactOrganization *string `json:"contactorganization,omitempty"`
+	ContactPerson       *string `json:"contactPerson,omitempty"`
+	ContactOrganization *string `json:"contactOrganization,omitempty"`
 }
 
 // The address for the contact supplying the service
 type ContactAddress struct {
-	AddressType     *string `json:"addresstype,omitempty"`
+	AddressType     *string `json:"addressType,omitempty"`
 	Address         *string `json:"address,omitempty"`
 	City            *string `json:"city,omitempty"`
-	StateOrProvince *string `json:"stateorprovince,omitempty"`
-	PostCode        *string `json:"postcode,omitempty"`
+	StateOrProvince *string `json:"stateOrProvince,omitempty"`
+	PostCode        *string `json:"postCode,omitempty"`
 	Country         *string `json:"country,omitempty"`
 }
 

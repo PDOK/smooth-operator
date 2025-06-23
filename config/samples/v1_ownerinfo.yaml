@@ -10,7 +10,7 @@ spec:
     csw:
       hrefTemplate: "https://www.nationaalgeoregister.nl/geonetwork/srv/dut/csw?service=CSW&version=2.0.2&request=GetRecordById&outputschema=http://www.isotc211.org/2005/gmd&elementsetname=full&id={{identifier}}"
       type: alternate
-    opensearch:
+    openSearch:
       hrefTemplate: "https://www.nationaalgeoregister.nl/geonetwork/opensearch/dut/{{identifier}}/OpenSearchDescription.xml"
       type: alternate
     html:
@@ -22,46 +22,46 @@ spec:
     author: # author/owner van de dataset
       name: pdok
       email: pdokbeheer@kadaster.nl
+  providerSite:
+    type: simple
+    href: https://pdok.nl
   wfs:
-    serviceprovider:
-      providername: PDOK
-      providersite:
-        type: simple
-        href: https://pdok.nl
-      servicecontact:
-        individualname: KlantContactCenter PDOK
-        positionname: pointOfContact
-        contactinfo:
+    serviceProvider:
+      providerName: PDOK
+      serviceContact:
+        individualName: KlantContactCenter PDOK
+        positionName: pointOfContact
+        contactInfo:
           phone:
             voice:
-            facsmile:
+            facsimile:
           text:
           address:
-            deliverypoint:
+            deliveryPoint:
             city: Apeldoorn
-            administrativearea:
-            postalcode:
+            administrativeArea:
+            postalCode:
             country: Netherlands
-            electronicmailaddress: BeheerPDOK@kadaster.nl
-          onlineresource:
+            electronicMailAddress: BeheerPDOK@kadaster.nl
+          onlineResource:
             type:
             href:
-          hoursofservice:
-          contactinstructions:
+          hoursOfService:
+          contactInstructions:
         role:
   wms:
-    contactinformation:
-      contactpersonprimary:
-        contactperson: KlantContactCenter PDOK
-        contactorganization: PDOK
-      contactposition: pointOfContact
-      contactaddress:
-        addresstype:
+    contactInformation:
+      contactPersonPrimary:
+        contactPerson: KlantContactCenter PDOK
+        contactOrganization: PDOK
+      contactPosition: pointOfContact
+      contactAddress:
+        addressType:
         address:
         city: Apeldoorn
-        stateorprovince:
-        postcode:
+        stateOrProvince:
+        postCode:
         country: Netherlands
-      contactvoicetelephone:
-      contactfacsimiletelephone:
-      contactelectronicmailAddress: BeheerPDOK@kadaster.nl
+      contactVoiceTelephone:
+      contactFacsimileTelephone:
+      contactElectronicMailAddress: BeheerPDOK@kadaster.nl

@@ -22,13 +22,13 @@ spec:
     author: # author/owner van de dataset
       name: pdok
       email: pdokbeheer@kadaster.nl
+  providerSite:
+    type: simple
+    href: https://pdok.nl
   wfs:
     serviceProvider:
       providerName: PDOK
-      providerSite:
-        type: simple
-        href: https://pdok.nl
-      servicecontact:
+      serviceContact:
         individualName: KlantContactCenter PDOK
         positionName: pointOfContact
         contactInfo:

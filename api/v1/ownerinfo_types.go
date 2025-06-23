@@ -68,7 +68,7 @@ type WFS struct {
 // ServiceProvider describes the provider of the WFS service
 type ServiceProvider struct {
 	ProviderName   *string         `json:"providerName,omitempty"`
-	ServiceContact *ServiceContact `json:"servicecontact,omitempty"`
+	ServiceContact *ServiceContact `json:"serviceContact,omitempty"`
 }
 
 // ProviderSite holds information about the provider's site

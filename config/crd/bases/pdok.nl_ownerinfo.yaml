@@ -127,7 +127,7 @@ spec:
                     properties:
                       providerName:
                         type: string
-                      servicecontact:
+                      serviceContact:
                         description: ServiceContact provides contact information for
                           the service
                         properties:

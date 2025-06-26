@@ -2,7 +2,10 @@ package status
 
 import (
 	"context"
-	"fmt"
+	"errors"
+	"slices"
+	"strconv"
+
 	"github.com/pdok/smooth-operator/model"
 	appsv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -17,8 +20,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 	"sigs.k8s.io/yaml"
-	"slices"
-	"strconv"
 )
 
 // GetReplicaSetEventHandlerForObj returns an event handler that only triggers a reconcile
@@ -78,7 +79,7 @@ func GetPodSummary(ctx context.Context, obj client.Object) (model.PodSummary, er
 	replicaSetRevision := func(rs appsv1.ReplicaSet) (int, error) {
 		val, ok := rs.Annotations["deployment.kubernetes.io/revision"]
 		if !ok {
-			return 0, fmt.Errorf("annotation 'deployment.kubernetes.io/revision' missing from replicaset")
+			return 0, errors.New("annotation 'deployment.kubernetes.io/revision' missing from replicaset")
 		}
 
 		return strconv.Atoi(val)
@@ -115,6 +116,7 @@ func GetPodSummary(ctx context.Context, obj client.Object) (model.PodSummary, er
 		}
 
 		ps = append(ps, model.ReplicaSetStatus{
+			//nolint:gosec
 			Generation:  int32(revision),
 			Total:       rs.Status.Replicas,
 			Ready:       rs.Status.ReadyReplicas,

@@ -19,6 +19,8 @@ type PodSummary []ReplicaSetStatus
 type OperatorStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+
+	// Summary of status of pods that belong to this resource
 	PodSummary PodSummary `json:"podSummary,omitempty"`
 	// Each condition contains details for one aspect of the current state of this Atom.
 	// Known .status.conditions.type are: "Reconciled"

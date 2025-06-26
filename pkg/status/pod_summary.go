@@ -9,17 +9,12 @@ import (
 	"github.com/pdok/smooth-operator/model"
 	appsv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/labels"
-	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/client-go/dynamic"
-	"k8s.io/client-go/rest"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/handler"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-	"sigs.k8s.io/yaml"
 )
 
 // GetReplicaSetEventHandlerForObj returns an event handler that only triggers a reconcile
@@ -70,8 +65,9 @@ func getOwnerRefOfKind(childObj client.Object, kind string) *metav1.OwnerReferen
 }
 
 // GetPodSummary returns a pod summary that includes the status of the last two replica sets that belong to obj based on its labels
-func GetPodSummary(ctx context.Context, obj client.Object) (model.PodSummary, error) {
-	replicaSets, err := getReplicaSets(ctx, obj)
+func GetPodSummary(ctx context.Context, k8sClient client.Client, obj client.Object) (model.PodSummary, error) {
+	var replicaSetList appsv1.ReplicaSetList
+	err := k8sClient.List(ctx, &replicaSetList, client.MatchingLabels(obj.GetLabels()))
 	if err != nil {
 		return nil, err
 	}
@@ -86,6 +82,7 @@ func GetPodSummary(ctx context.Context, obj client.Object) (model.PodSummary, er
 	}
 
 	// Sort replicasets by revision
+	replicaSets := replicaSetList.Items
 	if len(replicaSets) > 1 {
 		slices.SortFunc(replicaSets, func(rsa, rsb appsv1.ReplicaSet) int {
 			revA, aErr := replicaSetRevision(rsa)
@@ -131,40 +128,4 @@ func GetPodSummary(ctx context.Context, obj client.Object) (model.PodSummary, er
 	}
 
 	return ps, nil
-}
-
-// getReplicaSets returns a list of replicasets that belong to obj based on its labels
-func getReplicaSets(ctx context.Context, obj client.Object) ([]appsv1.ReplicaSet, error) {
-	cfg, err := rest.InClusterConfig()
-	if err != nil {
-		return nil, err
-	}
-
-	dynamicClient, err := dynamic.NewForConfig(cfg)
-	if err != nil {
-		return nil, err
-	}
-
-	gvk := schema.GroupVersionResource{
-		Group:    "apps",
-		Version:  "v1",
-		Resource: "replicasets",
-	}
-
-	unstructeredList, err := dynamicClient.Resource(gvk).Namespace(obj.GetNamespace()).List(ctx, metav1.ListOptions{
-		LabelSelector: labels.FormatLabels(obj.GetLabels()),
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	bytes, err := yaml.Marshal(unstructeredList.Items)
-	if err != nil {
-		return nil, err
-	}
-
-	var replicaSets []appsv1.ReplicaSet
-	err = yaml.Unmarshal(bytes, &replicaSets)
-
-	return replicaSets, err
 }

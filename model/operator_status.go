@@ -15,16 +15,16 @@ type ReplicaSetStatus struct {
 
 type PodSummary []ReplicaSetStatus
 
-// OperatorStatus defines the observed state of an Atom/WFS/WMS/....
+// OperatorStatus defines the observed state of an Atom/WFS/WMS/OGCAPI/...
 type OperatorStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// Summary of status of pods that belong to this resource
 	PodSummary PodSummary `json:"podSummary,omitempty"`
-	// Each condition contains details for one aspect of the current state of this Atom.
+	// Each condition contains details for one aspect of the current state of this CR.
 	// Known .status.conditions.type are: "Reconciled"
 	Conditions []metav1.Condition `json:"conditions,omitempty"`
-	// The result of creating or updating of each derived resource for this Atom.
+	// The result of creating or updating of each derived resource for this CR.
 	OperationResults map[string]controllerutil.OperationResult `json:"operationResults,omitempty"`
 }

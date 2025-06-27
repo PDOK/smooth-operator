@@ -64,8 +64,8 @@ func getOwnerRefOfKind(childObj client.Object, kind string) *metav1.OwnerReferen
 	return nil
 }
 
-// GetPodSummary returns a pod summary that includes the status of the last two replica sets that belong to obj based on its labels
-func GetPodSummary(ctx context.Context, k8sClient client.Client, obj client.Object) (model.PodSummary, error) {
+// getPodSummary returns a pod summary that includes the status of the last two replica sets that belong to obj based on its labels
+func getPodSummary(ctx context.Context, k8sClient client.Client, obj client.Object) (model.PodSummary, error) {
 	var replicaSetList appsv1.ReplicaSetList
 	err := k8sClient.List(ctx, &replicaSetList, client.MatchingLabels(obj.GetLabels()))
 	if err != nil {

@@ -4,6 +4,11 @@
     </a>
 </p>
 
+[![Build](https://github.com/PDOK/smooth-operator/actions/workflows/test.yml/badge.svg)](https://github.com/PDOK/smooth-operator/actions/workflows/test.yml)
+[![Lint](https://github.com/PDOK/smooth-operator/actions/workflows/lint.yml/badge.svg)](https://github.com/PDOK/smooth-operator/actions/workflows/lint-go.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/PDOK/smooth-operator)](https://goreportcard.com/report/github.com/PDOK/smooth-operator)
+[![GitHub license](https://img.shields.io/github/license/PDOK/smooth-operator)](https://github.com/PDOK/smooth-operator/blob/master/LICENSE)
+
 # Smooth Operator Library
 This repository contains code shared by the Kubernetes operators developed by [PDOK](https://www.pdok.nl/). There are no executable programs present in this codebase. 
 The goal of this repository is to support the development work of PDOK, but it can also be used as a starter to develop custom map related operators. At the moment the following operators have this repository as a basis: 

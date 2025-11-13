@@ -26,6 +26,8 @@ package controller
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"maps"
@@ -218,6 +220,21 @@ func KustomizeHash(obj client.Object) (hash string, err error) {
 	}
 	kustomizeHasher := hasher.Hasher{}
 	return kustomizeHasher.Hash(objKYaml)
+}
+
+// GenerateHashFromStrings generates a hash from a list of strings. This hash can be used to identify resources and
+// if they can be removed. E.g. the ogcapi-operator provides the volume-operator with a hash so it knows what resources
+// to create or remove.
+func GenerateHashFromStrings(sliceToHash []string) string {
+	// Concatenate all strings to hash
+	var data string
+
+	for _, val := range sliceToHash {
+		data += val
+	}
+
+	hash := sha256.Sum256([]byte(data))
+	return hex.EncodeToString(hash[:8])
 }
 
 func EnsureSetGVK(c client.Client, src client.Object, obj schema.ObjectKind) error {

@@ -234,6 +234,7 @@ func GenerateHashFromStrings(sliceToHash []string) string {
 	}
 
 	hash := sha256.Sum256([]byte(data))
+	// Take the first 8 bytes of the hash to make it in the same format as the kustomize hash.
 	return hex.EncodeToString(hash[:8])
 }
 

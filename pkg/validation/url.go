@@ -45,7 +45,7 @@ func CheckURLImmutability(oldURL, newURL model.URL, allErrs *field.ErrorList, pa
 	if (oldURL.URL == nil && newURL.URL != nil) || (oldURL.URL != nil && newURL.URL == nil) || (*oldURL.URL != *newURL.URL) {
 		*allErrs = append(*allErrs, field.Forbidden(
 			path,
-			"is immutable",
+			"is immutable, add the old and new urls to spec.ingressRouteUrls in order to change this field",
 		))
 	}
 }

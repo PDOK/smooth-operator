@@ -92,7 +92,7 @@ spec:
                     - hrefTemplate
                     - type
                     type: object
-                  opensearch:
+                  openSearch:
                     description: MetadataURL holds information about URL templates
                       for specific metadata formats
                     properties:
@@ -107,56 +107,55 @@ spec:
                 type: object
               namespaceTemplate:
                 type: string
+              providerSite:
+                description: ProviderSite holds information about the provider's site
+                properties:
+                  href:
+                    type: string
+                  type:
+                    type: string
+                required:
+                - href
+                - type
+                type: object
               wfs:
                 description: WFS contains Web Feature Service related information
                 properties:
-                  serviceprovider:
+                  serviceProvider:
                     description: ServiceProvider describes the provider of the WFS
                       service
                     properties:
-                      providername:
+                      providerName:
                         type: string
-                      providersite:
-                        description: ProviderSite holds information about the provider's
-                          site
-                        properties:
-                          href:
-                            type: string
-                          type:
-                            type: string
-                        required:
-                        - href
-                        - type
-                        type: object
-                      servicecontact:
+                      serviceContact:
                         description: ServiceContact provides contact information for
                           the service
                         properties:
-                          contactinfo:
+                          contactInfo:
                             description: ContactInfo encapsulates various types of
                               contact information
                             properties:
                               address:
                                 description: Address provides physical address details
                                 properties:
-                                  administrativearea:
+                                  administrativeArea:
                                     type: string
                                   city:
                                     type: string
                                   country:
                                     type: string
-                                  deliverypoint:
+                                  deliveryPoint:
                                     type: string
-                                  electronicmailaddress:
+                                  electronicMailAddress:
                                     type: string
-                                  postalcode:
+                                  postalCode:
                                     type: string
                                 type: object
-                              contactinstructions:
+                              contactInstructions:
                                 type: string
-                              hoursofservice:
+                              hoursOfService:
                                 type: string
-                              onlineresource:
+                              onlineResource:
                                 description: OnlineResource describes an online resource
                                   associated with the contact
                                 properties:
@@ -168,7 +167,7 @@ spec:
                               phone:
                                 description: Phone contains voice and facsimile numbers
                                 properties:
-                                  facsmile:
+                                  facsimile:
                                     type: string
                                   voice:
                                     type: string
@@ -176,60 +175,63 @@ spec:
                               text:
                                 type: string
                             type: object
-                          individualname:
+                          individualName:
                             type: string
-                          positionname:
+                          positionName:
                             type: string
                           role:
                             type: string
                         type: object
                     type: object
                 required:
-                - serviceprovider
+                - serviceProvider
                 type: object
               wms:
                 description: WMS contains Web Map Service related information
                 properties:
-                  contactinformation:
+                  contactInformation:
                     description: Information about a contact person for the service
                     properties:
-                      contactaddress:
+                      contactAddress:
                         description: The address for the contact supplying the service
                         properties:
                           address:
                             type: string
-                          addresstype:
+                          addressType:
                             type: string
                           city:
                             type: string
                           country:
                             type: string
-                          postcode:
+                          postCode:
                             type: string
-                          stateorprovince:
+                          stateOrProvince:
                             type: string
                         type: object
-                      contactelectronicmailAddress:
+                      contactElectronicMailAddress:
                         type: string
-                      contactfacsimiletelephone:
+                      contactFacsimileTelephone:
                         type: string
-                      contactpersonprimary:
+                      contactPersonPrimary:
                         description: The primary contact person
                         properties:
-                          contactorganization:
+                          contactOrganization:
                             type: string
-                          contactperson:
+                          contactPerson:
                             type: string
                         type: object
-                      contactposition:
+                      contactPosition:
                         type: string
-                      contactvoicetelephone:
+                      contactVoiceTelephone:
                         type: string
                     type: object
                 required:
-                - contactinformation
+                - contactInformation
                 type: object
             type: object
+            x-kubernetes-validations:
+            - message: providerSite is required when using wms or wfs
+              rule: (!has(self.wms) && !has(self.wfs)) || has(self.providerSite)
           status:
             description: OwnerInfoStatus defines the observed state of OwnerInfo.
             type: object

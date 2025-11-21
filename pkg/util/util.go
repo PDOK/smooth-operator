@@ -35,6 +35,7 @@ import (
 	"regexp"
 	"strings"
 
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/util/intstr"
 
 	"k8s.io/apimachinery/pkg/api/equality"
@@ -245,6 +246,17 @@ func EnsureSetGVK(c client.Client, src client.Object, obj schema.ObjectKind) err
 	}
 	obj.SetGroupVersionKind(gvk)
 	return nil
+}
+
+func CreateUnstructuredWithGroupVersionKind(gvr schema.GroupVersionResource, kind string) (obj *unstructured.Unstructured) {
+	obj = &unstructured.Unstructured{}
+	obj.SetGroupVersionKind(schema.GroupVersionKind{
+		Group:   gvr.Group,
+		Version: gvr.Version,
+		Kind:    kind,
+	})
+
+	return
 }
 
 func GetObjectFullName(c client.Client, obj client.Object) string {

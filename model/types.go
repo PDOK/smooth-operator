@@ -30,14 +30,14 @@ func (t ServiceType) ServiceTypeLabel() string {
 
 // ParseServiceType parses the pdok.nl/service-type label to a ServiceType
 func ParseServiceType(input string) (ServiceType, error) {
-	switch input {
-	case "wms":
+	switch strings.ToUpper(input) {
+	case "WMS":
 		return WMS, nil
-	case "wfs":
+	case "WFS":
 		return WFS, nil
-	case "atom":
+	case "ATOM":
 		return Atom, nil
-	case "ogc":
+	case "OGCAPI":
 		return OGCAPI, nil
 	default:
 		return "unknown", fmt.Errorf("could not parse %s as a ServiceType", input)

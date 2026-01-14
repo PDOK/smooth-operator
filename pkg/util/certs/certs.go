@@ -289,5 +289,5 @@ func (c *certConfig) validateCertConfig() error {
 }
 
 func getErrorWithMissingMessage(fieldName string) error {
-	return fmt.Errorf("Field '%s' was unexpectedly empty", fieldName)
+	return fmt.Errorf("field '%s' was unexpectedly empty", fieldName)
 }

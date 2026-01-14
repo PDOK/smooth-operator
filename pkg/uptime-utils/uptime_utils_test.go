@@ -1,4 +1,4 @@
-package uptime_utils
+package uptimeutils
 
 import (
 	"reflect"

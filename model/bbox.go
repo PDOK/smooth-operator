@@ -56,42 +56,42 @@ func ExtentToBBox(extent string) BBox {
 func (b *BBox) Combine(other BBox) {
 	minXA, err := strconv.ParseFloat(b.MinX, 64)
 	if err != nil {
-		panic(fmt.Errorf("Error while parsing minX to float: %w", err))
+		panic(fmt.Errorf("error while parsing minX to float: %w", err))
 	}
 
 	minYA, err := strconv.ParseFloat(b.MinY, 64)
 	if err != nil {
-		panic(fmt.Errorf("Error while parsing minY to float: %w", err))
+		panic(fmt.Errorf("error while parsing minY to float: %w", err))
 	}
 
 	maxXA, err := strconv.ParseFloat(b.MaxX, 64)
 	if err != nil {
-		panic(fmt.Errorf("Error while parsing maxX to float: %w", err))
+		panic(fmt.Errorf("error while parsing maxX to float: %w", err))
 	}
 
 	maxYA, err := strconv.ParseFloat(b.MaxY, 64)
 	if err != nil {
-		panic(fmt.Errorf("Error while parsing maxY to float: %w", err))
+		panic(fmt.Errorf("error while parsing maxY to float: %w", err))
 	}
 
 	minXB, err := strconv.ParseFloat(other.MinX, 64)
 	if err != nil {
-		panic(fmt.Errorf("Error while parsing minX to float: %w", err))
+		panic(fmt.Errorf("error while parsing minX to float: %w", err))
 	}
 
 	minYB, err := strconv.ParseFloat(other.MinY, 64)
 	if err != nil {
-		panic(fmt.Errorf("Error while parsing minY to float: %w", err))
+		panic(fmt.Errorf("error while parsing minY to float: %w", err))
 	}
 
 	maxXB, err := strconv.ParseFloat(other.MaxX, 64)
 	if err != nil {
-		panic(fmt.Errorf("Error while parsing maxX to float: %w", err))
+		panic(fmt.Errorf("error while parsing maxX to float: %w", err))
 	}
 
 	maxYB, err := strconv.ParseFloat(other.MaxY, 64)
 	if err != nil {
-		panic(fmt.Errorf("Error while parsing maxY to float: %w", err))
+		panic(fmt.Errorf("error while parsing maxY to float: %w", err))
 	}
 
 	b.MinX = strconv.FormatFloat(min(minXA, minXB), 'f', -1, 64)

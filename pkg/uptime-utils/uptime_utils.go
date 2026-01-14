@@ -1,4 +1,4 @@
-package uptime_utils
+package uptimeutils
 
 import (
 	"crypto/sha1" //nolint:gosec
@@ -10,7 +10,7 @@ func GetUptimeAnnotations(customResourceAnnotations map[string]string, id string
 
 	ingressRouteAnnotations := make(map[string]string)
 
-	ingressRouteAnnotations[UptimePrefix+"id"] = GetUptimeId(id)
+	ingressRouteAnnotations[UptimePrefix+"id"] = GetUptimeID(id)
 	ingressRouteAnnotations[UptimePrefix+"name"] = name
 	ingressRouteAnnotations[UptimePrefix+"url"] = url
 	ingressRouteAnnotations[UptimePrefix+"tags"] = strings.Join(tags, ",")
@@ -28,7 +28,7 @@ func PassUptimeAnnotationsFormCRToIngressRoute(customResourceAnnotations map[str
 	}
 }
 
-func GetUptimeId(seed string) string {
+func GetUptimeID(seed string) string {
 	sum := sha1.Sum([]byte(seed)) //nolint:gosec
 	return hex.EncodeToString(sum[:])
 }

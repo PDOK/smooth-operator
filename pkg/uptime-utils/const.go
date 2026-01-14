@@ -1,3 +1,3 @@
-package uptime_utils
+package uptimeutils
 
 const UptimePrefix = "uptime.pdok.nl/"

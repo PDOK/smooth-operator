@@ -90,7 +90,7 @@ func TestSetUptimeAnnotations(t *testing.T) {
 	tags := []string{"tag1", "tag2"}
 
 	expected := map[string]string{
-		"uptime.pdok.nl/id":    "1",
+		"uptime.pdok.nl/id":    "356a192b7913b04c54574d18c28d46e6395428ab",
 		"uptime.pdok.nl/name":  "test",
 		"uptime.pdok.nl/url":   "http://test.com",
 		"uptime.pdok.nl/tags":  "tag1,tag2",

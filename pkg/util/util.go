@@ -265,7 +265,7 @@ func GetObjectFullName(c client.Client, obj client.Object) string {
 	return gvk.Group + "/" + gvk.Version + "/" + gvk.Kind + "/" + key.String()
 }
 
-func Pointer[T interface{}](val T) *T {
+func Pointer[T any](val T) *T {
 	return &val
 }
 
@@ -274,7 +274,7 @@ func IntOrStrStrPtr(s string) *intstr.IntOrString {
 	return &v
 }
 
-func PointerVal[T interface{}](val *T, defaultValue T) T {
+func PointerVal[T any](val *T, defaultValue T) T {
 	if val != nil {
 		return *val
 	}

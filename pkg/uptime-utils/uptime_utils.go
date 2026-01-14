@@ -1,7 +1,7 @@
 package uptime_utils
 
 import (
-	"crypto/sha1"
+	"crypto/sha1" //nolint:gosec
 	"encoding/hex"
 	"strings"
 )
@@ -29,6 +29,6 @@ func PassUptimeAnnotationsFormCRToIngressRoute(customResourceAnnotations map[str
 }
 
 func GetUptimeId(seed string) string {
-	sum := sha1.Sum([]byte(seed))
+	sum := sha1.Sum([]byte(seed)) //nolint:gosec
 	return hex.EncodeToString(sum[:])
 }

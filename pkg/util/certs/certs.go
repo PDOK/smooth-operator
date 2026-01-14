@@ -77,7 +77,7 @@ func main() {
 	}
 	err := generateCerts(myCertConfig)
 	if err != nil {
-		println(err.Error())
+		fmt.Println(err.Error())
 		os.Exit(1)
 	}
 	os.Exit(0)
@@ -239,12 +239,21 @@ func writeFile(filepath string, sCert *bytes.Buffer) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
 
 	_, err = f.Write(sCert.Bytes())
 	if err != nil {
+		err := f.Close()
+		if err != nil {
+			return err
+		}
 		return err
 	}
+
+	err = f.Close()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 

@@ -231,7 +231,7 @@ func GenerateHashFromStrings(sliceToHash []string) string {
 	var data string
 
 	for _, val := range sliceToHash {
-		data += val
+		data += val //nolint:perfsprint
 	}
 
 	hash := sha256.Sum256([]byte(data))

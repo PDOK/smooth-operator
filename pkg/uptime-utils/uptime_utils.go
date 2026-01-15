@@ -15,14 +15,14 @@ func GetUptimeAnnotations(customResourceAnnotations map[string]string, id string
 	ingressRouteAnnotations[UptimePrefix+"url"] = url
 	ingressRouteAnnotations[UptimePrefix+"tags"] = strings.Join(tags, ",")
 
-	PassUptimeAnnotationsFormCRToIngressRoute(customResourceAnnotations, ingressRouteAnnotations)
+	PassUptimeAnnotationsFromCRToIngressRoute(customResourceAnnotations, ingressRouteAnnotations)
 
 	return ingressRouteAnnotations
 }
 
-func PassUptimeAnnotationsFormCRToIngressRoute(customResourceAnnotations map[string]string, ingressRouteAnnotations map[string]string) {
+func PassUptimeAnnotationsFromCRToIngressRoute(customResourceAnnotations map[string]string, ingressRouteAnnotations map[string]string) {
 	for key, value := range customResourceAnnotations {
-		if len(key) >= len(UptimePrefix) && key[:len(UptimePrefix)] == UptimePrefix {
+		if strings.HasPrefix(key, UptimePrefix) {
 			ingressRouteAnnotations[key] = value
 		}
 	}

@@ -72,9 +72,9 @@ func TestPassUptimeAnnotationsFormCRToIngressRoute(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			PassUptimeAnnotationsFormCRToIngressRoute(tt.customResourceAnnotations, tt.ingressRouteAnnotations)
+			PassUptimeAnnotationsFromCRToIngressRoute(tt.customResourceAnnotations, tt.ingressRouteAnnotations)
 			if !reflect.DeepEqual(tt.ingressRouteAnnotations, tt.expectedAnnotations) {
-				t.Errorf("PassUptimeAnnotationsFormCRToIngressRoute() = %v, want %v", tt.ingressRouteAnnotations, tt.expectedAnnotations)
+				t.Errorf("PassUptimeAnnotationsFromCRToIngressRoute() = %v, want %v", tt.ingressRouteAnnotations, tt.expectedAnnotations)
 			}
 		})
 	}

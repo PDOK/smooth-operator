@@ -3,10 +3,19 @@ package uptimeutils
 import (
 	"crypto/sha1" //nolint:gosec
 	"encoding/hex"
+	"sort"
 	"strings"
 )
 
-func GetUptimeAnnotations(customResourceAnnotations map[string]string, id string, name string, url string, tags []string) map[string]string {
+func GetUptimeAnnotations(customResourceAnnotations map[string]string, id string, name string, url string, customResourceLabels map[string]string) map[string]string {
+
+	tags := []string{
+		"public-stats",
+	}
+	for _, v := range customResourceLabels {
+		tags = append(tags, v)
+	}
+	sort.Strings(tags)
 
 	ingressRouteAnnotations := make(map[string]string)
 

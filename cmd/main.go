@@ -53,8 +53,7 @@ func init() {
 	// +kubebuilder:scaffold:scheme
 }
 
-//nolint:funlen
-func main() {
+func main() { //nolint
 	var metricsAddr string
 	var metricsCertPath, metricsCertName, metricsCertKey string
 	var webhookCertPath, webhookCertName, webhookCertKey string

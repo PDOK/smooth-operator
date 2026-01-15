@@ -102,7 +102,12 @@ func SendSlackRequest(slackRequest Request, slackURL string) error {
 	if err != nil {
 		return err
 	}
-	defer response.Body.Close()
+
+	err = response.Body.Close()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 

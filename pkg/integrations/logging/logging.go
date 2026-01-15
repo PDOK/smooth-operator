@@ -1,6 +1,8 @@
 package logging
 
 import (
+	"fmt"
+
 	"github.com/pdok/smooth-operator/pkg/integrations/slack"
 	zap "go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -10,7 +12,7 @@ type StdoutWriter struct {
 }
 
 func (s StdoutWriter) Write(p []byte) (n int, err error) {
-	println(string(p))
+	fmt.Println(string(p))
 	return len(p), nil
 }
 

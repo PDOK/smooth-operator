@@ -55,7 +55,7 @@ func ApplySchemaDefaultsStr(yamlString string) (string, error) {
 	return string(result), nil
 }
 
-func ApplySchemaDefaults(raw map[string]interface{}) (map[string]interface{}, error) {
+func ApplySchemaDefaults(raw map[string]any) (map[string]any, error) {
 	data := &unstructured.Unstructured{Object: raw}
 
 	kind, ok := data.Object["kind"]

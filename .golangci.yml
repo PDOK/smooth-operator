@@ -59,7 +59,7 @@ linters:
     - unused
     - usestdlibvars
     - usetesting
-    - wastedassign
+    - wastedassign # finds wasted assignment statements
   settings:
     revive:
       rules:

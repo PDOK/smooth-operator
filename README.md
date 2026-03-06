@@ -47,7 +47,7 @@ This project is developed by [PDOK](https://www.pdok.nl/), a platform for public
 ```
 MIT License
 
-Copyright (c) 2025 Publieke Dienstverlening op de Kaart
+Copyright (c) 2026 Publieke Dienstverlening op de Kaart
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

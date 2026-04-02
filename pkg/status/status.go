@@ -78,6 +78,9 @@ func updateStatus[O ObjectWithStatus](ctx context.Context, k8sClient client.Clie
 	}
 	for _, condition := range conditions {
 		if meta.SetStatusCondition(&status.Conditions, condition) {
+			if c := meta.FindStatusCondition(status.Conditions, condition.Type); c != nil {
+				c.LastTransitionTime = condition.LastTransitionTime
+			}
 			changed = true
 		}
 	}

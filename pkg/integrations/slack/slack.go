@@ -28,64 +28,6 @@ type ValueBlock struct {
 	Text string `json:"text"`
 }
 
-func GetSlackBlock(generalMessage string, jobURL string, color string, datasetName string) Request {
-	var slackBlock = Block{
-		Type: "section",
-		Text: ValueBlock{
-			Type: "mrkdwn",
-			Text: generalMessage,
-		},
-		Fields: []ValueBlock{{
-			Type: "mrkdwn",
-			Text: "*Dataset*",
-		}, {
-			Type: "mrkdwn",
-			Text: "*Job*",
-		}, {
-			Type: "mrkdwn",
-			Text: datasetName,
-		}, {
-			Type: "mrkdwn",
-			Text: jobURL,
-		}},
-	}
-
-	slackElement := Element{
-		Color:  color,
-		Blocks: []Block{slackBlock},
-	}
-
-	return Request{
-		Attachments: []Element{slackElement},
-	}
-}
-
-func GetSlackErrorMessage(message string, bundle string, color string) Request {
-	var slackBlock = Block{
-		Type: "section",
-		Text: ValueBlock{
-			Type: "mrkdwn",
-			Text: message,
-		},
-		Fields: []ValueBlock{{
-			Type: "mrkdwn",
-			Text: "*Bundle*",
-		}, {
-			Type: "mrkdwn",
-			Text: bundle,
-		}},
-	}
-
-	slackElement := Element{
-		Color:  color,
-		Blocks: []Block{slackBlock},
-	}
-
-	return Request{
-		Attachments: []Element{slackElement},
-	}
-}
-
 func GetSimpleSlackErrorMessage(message string) Request {
 	return Request{
 		Attachments: nil,

@@ -87,6 +87,18 @@ func FinalizeIfNecessary(ctx context.Context, c client.Client, obj client.Object
 	return false, err
 }
 
+// CombineLabels combines multiple sets of labels into one set of labels
+// if a label key exists in multiple labelSets, the value of last labelSet with that key will be returned
+func CombineLabels(labelSets ...map[string]string) map[string]string {
+	labels := make(map[string]string)
+	for _, labelSet := range labelSets {
+		maps.Copy(labels, labelSet)
+	}
+	return labels
+}
+
+// SetImmutableLabels
+// Deprecated: immutability check can cause conflicts with external mutators, use CombineLabels instead
 func SetImmutableLabels(c client.Client, obj client.Object, labels map[string]string) error {
 	objLabels := obj.GetLabels()
 	if obj.GetResourceVersion() != "" || len(objLabels) > 0 {

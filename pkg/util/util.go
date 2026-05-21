@@ -98,6 +98,7 @@ func CombineLabels(labelSets ...map[string]string) map[string]string {
 }
 
 // SetImmutableLabels
+//
 // Deprecated: immutability check can cause conflicts with external mutators, use CombineLabels instead
 func SetImmutableLabels(c client.Client, obj client.Object, labels map[string]string) error {
 	objLabels := obj.GetLabels()

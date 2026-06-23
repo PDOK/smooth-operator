@@ -39,6 +39,8 @@ func ParseServiceType(input string) (ServiceType, error) {
 		return Atom, nil
 	case "OGC":
 		return OGCAPI, nil
+	case "OGCAPI":
+		return OGCAPI, nil
 	default:
 		return "unknown", fmt.Errorf("could not parse %s as a ServiceType", input)
 	}

@@ -39,7 +39,7 @@ func ParseServiceType(input string) (ServiceType, error) {
 		return Atom, nil
 	case "OGC":
 		return OGCAPI, nil
-	case "OGCAPI":
+	case "OGCAPI": // TODO This is a temporary fix for the service-spectator. Should be refactored.
 		return OGCAPI, nil
 	default:
 		return "unknown", fmt.Errorf("could not parse %s as a ServiceType", input)

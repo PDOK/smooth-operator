@@ -2,6 +2,8 @@ package reloader
 
 import (
 	"flag"
+	"fmt"
+	"strconv"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -13,39 +15,81 @@ const (
 	AutoAnnotation = "reloader.stakater.com/auto"
 	// AutoAnnotationValue is the value set for AutoAnnotation.
 	AutoAnnotationValue = "true"
+	// SearchAnnotation makes Stakater Reloader restart a Deployment when referenced ConfigMaps or Secrets annotated with reloader.stakater.com/match change.
+	SearchAnnotation = "reloader.stakater.com/search"
+	// SearchAnnotationValue is the value set for SearchAnnotation.
+	SearchAnnotationValue = "true"
 )
 
-var setReloaderAnnotations = false
+type annotationMode string
+
+const (
+	disabledMode annotationMode = "false"
+	autoMode     annotationMode = "auto"
+	searchMode   annotationMode = "search"
+)
+
+var reloaderMode = disabledMode
+
+func (m *annotationMode) String() string {
+	return string(*m)
+}
+
+func (m *annotationMode) Set(value string) error {
+	switch value {
+	case string(autoMode), string(searchMode):
+		*m = annotationMode(value)
+	default:
+		enabled, err := strconv.ParseBool(value)
+		if err != nil {
+			return fmt.Errorf("expected auto, search, true or false, got %q", value)
+		}
+		*m = disabledMode
+		if enabled {
+			*m = autoMode
+		}
+	}
+	return nil
+}
+
+func (*annotationMode) IsBoolFlag() bool {
+	return true
+}
 
 // BindFlag registers the set-reloader-annotations flag on the given FlagSet.
 func BindFlag(fs *flag.FlagSet) {
-	fs.BoolVar(&setReloaderAnnotations, FlagName, false,
-		"When enabled Deployments get the "+AutoAnnotation+" annotation that is used by Stakater Reloader.")
+	reloaderMode = disabledMode
+	fs.Var(&reloaderMode, FlagName,
+		"Set the Stakater Reloader annotation on Deployments: auto, search, true (auto), or false (disabled). A bare flag enables auto; use =search to enable search.")
 }
 
-// SetReloaderAnnotations enables or disables setting the Reloader annotation.
+// SetReloaderAnnotations enables the auto annotation or disables both Reloader annotations.
 func SetReloaderAnnotations(set bool) {
-	setReloaderAnnotations = set
+	reloaderMode = disabledMode
+	if set {
+		reloaderMode = autoMode
+	}
 }
 
 // IsEnabled reports whether the Reloader annotation should be set.
 func IsEnabled() bool {
-	return setReloaderAnnotations
+	return reloaderMode != disabledMode
 }
 
-// SetAnnotation adds the Reloader annotation to obj when enabled, and removes it otherwise.
+// SetAnnotation sets the selected Reloader annotation and removes the unselected annotations.
 func SetAnnotation(obj metav1.Object) {
 	annotations := obj.GetAnnotations()
-	if setReloaderAnnotations {
+	delete(annotations, AutoAnnotation)
+	delete(annotations, SearchAnnotation)
+	if IsEnabled() {
 		if annotations == nil {
 			annotations = map[string]string{}
 		}
-		annotations[AutoAnnotation] = AutoAnnotationValue
-		obj.SetAnnotations(annotations)
-		return
+		if reloaderMode == searchMode {
+			annotations[SearchAnnotation] = SearchAnnotationValue
+		} else {
+			annotations[AutoAnnotation] = AutoAnnotationValue
+		}
 	}
-	if _, ok := annotations[AutoAnnotation]; ok {
-		delete(annotations, AutoAnnotation)
-		obj.SetAnnotations(annotations)
-	}
+	obj.SetAnnotations(annotations)
 }
